@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Virtual Gift Consumption — Jinyan Xiang, Ph.D.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ef; --warm-white: #fffdf9;
+    --gold: #c9a84c; --gold-light: #e8d5a3; --gold-pale: #f5edd8; --gold-dim: #a8863a;
+    --slate: #2e3642; --slate-mid: #4a5568; --slate-light: #718096;
+    --accent: #8b5e3c; --blue-dark: #2c5a9b; --blue-light: #8db5c8;
+    --purple: #6b46c1; --purple-light: #ede9fe;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--slate); }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 60px; background:rgba(250,246,239,0.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+  }
+  .nav-name { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--slate); text-decoration:none; }
+  .nav-name span { color:var(--gold); }
+  .nav-links { display:flex; gap:28px; list-style:none; align-items:center; }
+  .nav-links a { font-size:12px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-mid); text-decoration:none; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--gold); }
+
+  .project-hero { padding:130px 60px 60px; border-bottom:1px solid var(--gold-light); position:relative; overflow:hidden; }
+  .project-hero::after { content:'05'; position:absolute; right:40px; top:50%; transform:translateY(-50%); font-family:'Cormorant Garamond',serif; font-size:260px; font-weight:700; color:rgba(201,168,76,0.06); line-height:1; pointer-events:none; }
+  .hero-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .meta-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:var(--gold-pale); color:var(--accent); border:1px solid var(--gold-light); }
+  .project-title { font-family:'Cormorant Garamond',serif; font-size:clamp(34px,4vw,56px); font-weight:700; line-height:1.15; color:var(--slate); max-width:760px; margin-bottom:20px; }
+  .project-subtitle { font-size:15px; color:var(--slate-mid); font-weight:300; line-height:1.75; max-width:620px; margin-bottom:28px; }
+  .hero-stats { display:flex; gap:36px; flex-wrap:wrap; margin-bottom:28px; }
+  .stat { border-left:2px solid var(--gold); padding-left:14px; }
+  .stat-val { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--slate); line-height:1; }
+  .stat-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-light); margin-top:3px; }
+  .read-paper-btn { display:inline-flex; align-items:center; gap:8px; padding:11px 24px; border:1.5px solid var(--gold); color:var(--gold-dim); border-radius:4px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; transition:all 0.2s; }
+  .read-paper-btn:hover { background:var(--gold); color:var(--warm-white); }
+
+  .content { max-width:1060px; margin:0 auto; padding:64px 60px; }
+  .section-block { margin-bottom:60px; }
+  .block-eyebrow { font-size:9.5px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .block-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--slate); margin-bottom:14px; line-height:1.25; }
+  .block-divider { width:48px; height:2px; background:linear-gradient(90deg,var(--gold),transparent); margin-bottom:20px; }
+  .block-text { font-size:14px; color:var(--slate-mid); line-height:1.85; font-weight:300; }
+  .block-text p { margin-bottom:12px; }
+  .block-text strong { color:var(--slate); font-weight:600; }
+  .block-text em { font-style:italic; color:var(--accent); }
+
+  /* TL;DR */
+  .tldr { background:var(--slate); border-radius:12px; padding:28px 32px; margin-bottom:60px; display:flex; gap:24px; align-items:flex-start; box-shadow:0 4px 24px rgba(46,54,66,0.2); }
+  .tldr-label { font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .tldr-text { font-size:14.5px; color:var(--gold-pale); line-height:1.75; font-weight:300; }
+  .tldr-text strong { color:#fff; font-weight:600; }
+  .tldr-icon { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; color:rgba(201,168,76,0.3); line-height:1; flex-shrink:0; }
+
+  /* METHOD CARD */
+  .method-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:12px; padding:24px 28px; box-shadow:0 2px 12px rgba(201,168,76,0.08); margin-top:20px; }
+  .method-row { display:flex; gap:10px; margin-bottom:8px; }
+  .method-label { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold); width:64px; flex-shrink:0; padding-top:2px; }
+  .method-val { font-size:13px; color:var(--slate-mid); line-height:1.6; font-weight:300; }
+  .method-val strong { color:var(--slate); font-weight:600; }
+  .method-val em { font-style:italic; color:var(--slate-light); }
+
+  /* FINDINGS GRID */
+  .findings-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-top:20px; }
+  .finding-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; padding:18px 20px; text-align:center; position:relative; overflow:hidden; }
+  .finding-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); }
+  .finding-pct { font-family:'Cormorant Garamond',serif; font-size:44px; font-weight:700; color:var(--gold); line-height:1; margin-bottom:6px; }
+  .finding-driver { font-size:10px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-mid); margin-bottom:8px; }
+  .finding-desc { font-size:11.5px; color:var(--slate-light); line-height:1.55; font-weight:300; }
+  .finding-note { font-size:10px; color:var(--slate-light); font-style:italic; margin-top:6px; }
+
+  /* INTERACTION FINDINGS */
+  .interaction-box { background:#f0ece4; border:1.5px solid var(--gold); border-radius:12px; padding:22px 26px; margin-top:20px; }
+  .interaction-title { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+  .interaction-row { display:flex; gap:10px; align-items:flex-start; margin-bottom:10px; }
+  .interaction-row:last-child { margin-bottom:0; }
+  .interaction-icon { font-size:14px; flex-shrink:0; margin-top:1px; }
+  .interaction-text { font-size:13px; color:var(--slate-mid); line-height:1.6; font-weight:300; }
+  .interaction-text strong { color:var(--slate); font-weight:600; }
+
+  /* IMPLICATIONS */
+  .impl-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+  .impl-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(201,168,76,0.07); }
+  .impl-header { padding:14px 20px; border-bottom:1px solid var(--gold-pale); }
+  .impl-num { font-family:'Cormorant Garamond',serif; font-size:11px; font-weight:700; color:var(--gold); letter-spacing:0.1em; text-transform:uppercase; margin-bottom:4px; }
+  .impl-title { font-family:'Cormorant Garamond',serif; font-size:17px; font-weight:700; color:var(--slate); line-height:1.2; }
+  .impl-body { padding:16px 20px; }
+  .impl-text { font-size:12.5px; color:var(--slate-mid); line-height:1.65; font-weight:300; }
+  .impl-text strong { color:var(--slate); font-weight:600; }
+  .impl-example { margin-top:12px; background:var(--gold-pale); border-radius:6px; padding:10px 14px; font-size:12px; color:var(--slate-mid); line-height:1.6; font-style:italic; border-left:3px solid var(--gold); }
+  .impl-example strong { font-style:normal; color:var(--slate); font-weight:600; }
+
+  /* CONCLUSION */
+  .conclusion-box { background:var(--gold-pale); border:1.5px solid var(--gold-light); border-radius:10px; padding:22px 28px; border-left:4px solid var(--gold); }
+  .conclusion-box p { font-size:14px; color:var(--slate-mid); line-height:1.75; font-weight:300; }
+  .conclusion-box strong { color:var(--slate); font-weight:600; }
+
+  .project-nav { border-top:1px solid var(--gold-light); padding:36px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .proj-nav-link { display:flex; flex-direction:column; gap:4px; text-decoration:none; }
+  .proj-nav-label { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--slate-light); }
+  .proj-nav-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; color:var(--slate); transition:color 0.2s; }
+  .proj-nav-link:hover .proj-nav-title { color:var(--gold); }
+
+  footer { background:var(--slate); padding:24px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .footer-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--gold-light); }
+  .footer-copy { font-size:11px; color:var(--slate-light); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+  .fade-in { animation:fadeUp 0.7s ease both; }
+  .fade-in-2 { animation:fadeUp 0.7s ease 0.15s both; }
+  .fade-in-3 { animation:fadeUp 0.7s ease 0.3s both; }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Jinyan <span>Xiang</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#research">Academia</a></li>
+    <li><a href="index.html#industry">Industry</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="index.html" style="color:var(--gold);">← Portfolio</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="project-hero">
+  <div class="hero-meta fade-in">
+    <span class="meta-pill">Virtual Gifting</span>
+    <span class="meta-pill">Status</span>
+    <span class="meta-pill">Online Communities</span>
+    <span class="meta-pill">Econometrics</span>
+  </div>
+  <h1 class="project-title fade-in-2">What Drives Virtual Gift Consumption<br>in Online Communities?</h1>
+  <p class="project-subtitle fade-in-2">Examines how gift price, giver status, and recipient status — and their interactions — shape the decision to consume virtual gifts in a European online virtual world, using observational data and econometric modeling.</p>
+  <div class="hero-stats fade-in-3">
+    <div class="stat"><div class="stat-val">19,654</div><div class="stat-label">Gift Incidents Analyzed</div></div>
+    <div class="stat"><div class="stat-val">62%</div><div class="stat-label">Baseline Consumption Rate</div></div>
+    <div class="stat"><div class="stat-val">+16%</div><div class="stat-label">More Likely to Consume / $0.25 Price ↑</div></div>
+    <div class="stat"><div class="stat-val">3</div><div class="stat-label">Key Drivers Identified</div></div>
+  </div>
+  <a href="https://www.dropbox.com/scl/fi/gpfvjomlu5fr6cdhns4nd/What-Drives-Virtual-Gift-Consumption-in-Online-Communities.pdf?rlkey=8ioqpwom3l44m5j06l1o8i8ym&st=5cwmzs00&dl=0" target="_blank" class="read-paper-btn fade-in-3">Read Full Paper →</a>
+</div>
+
+<div class="content">
+
+  <!-- TL;DR -->
+  <div class="tldr reveal">
+    <div class="tldr-icon">✦</div>
+    <div>
+      <div class="tldr-label">TL;DR</div>
+      <div class="tldr-text">
+        In online communities, people are more likely to consume a virtual gift when it is <strong>more expensive, sent by a high-status giver, or received by a high-status recipient</strong>. But status acts as a substitute for price — the more status is present, the less price matters.
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKGROUND -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Background</div>
+    <div class="block-title">The Rise of Virtual Gifting</div>
+    <div class="block-divider"></div>
+    <div class="block-text">
+      <p><em>Virtual gifts</em> — non-physical items purchased, sent, received, and consumed as gifts — are a fast-growing category in online platforms. From avatar accessories and apparel to home decor in virtual worlds, platforms like TikTok, Second Life, and Kim Kardashian Hollywood all offer virtual gift economies.</p>
+      <p>Despite their growing commercial importance, <strong>little is known about what drives recipients to actually consume these gifts</strong>. This study uses observational data from a European online virtual world to examine how gift price, giver status, and recipient status influence consumption decisions.</p>
+    </div>
+  </div>
+
+  <!-- METHOD -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Methodology</div>
+    <div class="block-title">Observational Data & Econometric Modeling</div>
+    <div class="block-divider"></div>
+    <div class="method-card">
+      <div class="method-row">
+        <div class="method-label">Data</div>
+        <div class="method-val">19,654 gift consumption incidents with a consumption rate of 62%, drawn from a European online virtual world</div>
+      </div>
+      <div class="method-row">
+        <div class="method-label">Status</div>
+        <div class="method-val">Measured by <strong>degree centrality</strong> — the number of friends a user has in the non-directional social network</div>
+      </div>
+      <div class="method-row">
+        <div class="method-label">Analysis</div>
+        <div class="method-val">
+          <strong>Binary probit model</strong> with the <strong>control function approach</strong> <em>— to address endogeneity due to status acquisition</em><br>
+          + <strong>Heckman's two-step correction</strong> <em>— to address endogeneity due to selection bias</em>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- KEY FINDINGS -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Key Findings</div>
+    <div class="block-title">Three Drivers of Consumption</div>
+    <div class="block-divider"></div>
+
+    <div class="findings-grid">
+      <div class="finding-card">
+        <div class="finding-pct">+16%</div>
+        <div class="finding-driver">Gift Price</div>
+        <div class="finding-desc">Recipients are more likely to consume a virtual gift as the gift price increases by $0.25.</div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-pct">+13%</div>
+        <div class="finding-driver">Giver Status</div>
+        <div class="finding-desc">Recipients are more likely to consume when the giver's status increases by 0.1 unit of degree centrality.</div>
+      </div>
+      <div class="finding-card">
+        <div class="finding-pct">+17%</div>
+        <div class="finding-driver">Recipient Status</div>
+        <div class="finding-desc">Recipients are more likely to consume when their own status increases by 0.1 unit of degree centrality.</div>
+      </div>
+    </div>
+
+    <!-- INTERACTION EFFECTS -->
+    <div class="interaction-box">
+      <div class="interaction-title">Interaction Effects — Status as a Substitute for Price</div>
+      <div class="interaction-row">
+        <div class="interaction-icon">↘</div>
+        <div class="interaction-text">The <strong>marginal effect of gift price</strong> on consumption <strong>decreases</strong> as the giver's status or the recipient's status increases — high status reduces reliance on price as a signal of gift value.</div>
+      </div>
+      <div class="interaction-row">
+        <div class="interaction-icon">↘</div>
+        <div class="interaction-text">The <strong>marginal effect of giver status</strong> on consumption <strong>decreases</strong> as the recipient's status increases — high-status recipients are less swayed by the social signal of who sent the gift.</div>
+      </div>
+      <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--gold-light);font-size:11px;color:var(--slate-light);font-style:italic;">
+        Note: Marginal effects are interpreted at the corresponding percentile of the moderating variable. For example, for a giver in the 95th percentile of status, a $0.25 price increase raises consumption probability by –0.05%, vs. +0.33% for a giver in the 5th percentile.
+      </div>
+    </div>
+  </div>
+
+  <!-- IMPLICATIONS -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Managerial Implications</div>
+    <div class="block-title">Two Strategic Directions</div>
+    <div class="block-divider"></div>
+    <div class="impl-grid">
+
+      <div class="impl-card">
+        <div class="impl-header">
+          <div class="impl-num">Implication 01</div>
+          <div class="impl-title">Smarter Gift Recommendation & Targeted Promotion</div>
+        </div>
+        <div class="impl-body">
+          <div class="impl-text">Integrate <strong>giver and recipient characteristics</strong> — particularly relative status between them — as features in gift recommendation systems and targeted promotion engines, supplementing existing price- and category-based signals.</div>
+          <div class="impl-example">For a high-status recipient receiving from a low-status giver, <strong>price becomes a stronger lever</strong> — promotions on premium gifts may be especially effective.</div>
+        </div>
+      </div>
+
+      <div class="impl-card">
+        <div class="impl-header">
+          <div class="impl-num">Implication 02</div>
+          <div class="impl-title">Nudge Status Acquisition & Increase Status Salience</div>
+        </div>
+        <div class="impl-body">
+          <div class="impl-text">Display user status through <strong>tiered status badges</strong> on profiles. Encourage status growth via membership, connection-building, and semantic priming that elevates perceived status.</div>
+          <div class="impl-example"><strong>Example message:</strong> "To our honored friend [name]: You have received a gift from the prestigious [giver]. We hope you enjoy it!"</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- PROJECT NAV -->
+<div class="project-nav">
+  <a href="project-4.html" class="proj-nav-link">
+    <div class="proj-nav-label">← Previous</div>
+    <div class="proj-nav-title">Pro-Environmental Behaviors</div>
+  </a>
+  <a href="project-6.html" class="proj-nav-link" style="text-align:right;">
+    <div class="proj-nav-label">Next Project →</div>
+    <div class="proj-nav-title">Panic Buying during COVID-19</div>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-name">Jinyan Xiang, Ph.D.</div>
+  <div class="footer-copy">© 2025 · All rights reserved</div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold:0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

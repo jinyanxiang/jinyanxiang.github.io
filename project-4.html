@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pro-Environmental Behaviors — Jinyan Xiang, Ph.D.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ef; --warm-white: #fffdf9;
+    --gold: #c9a84c; --gold-light: #e8d5a3; --gold-pale: #f5edd8; --gold-dim: #a8863a;
+    --slate: #2e3642; --slate-mid: #4a5568; --slate-light: #718096;
+    --accent: #8b5e3c; --blue-dark: #2c5a9b; --blue-light: #8db5c8;
+    --green: #2d7a4f; --green-light: #e8f5ee;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--slate); }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 60px; background:rgba(250,246,239,0.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+  }
+  .nav-name { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--slate); text-decoration:none; }
+  .nav-name span { color:var(--gold); }
+  .nav-links { display:flex; gap:28px; list-style:none; align-items:center; }
+  .nav-links a { font-size:12px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-mid); text-decoration:none; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--gold); }
+
+  .project-hero { padding:130px 60px 60px; border-bottom:1px solid var(--gold-light); position:relative; overflow:hidden; }
+  .project-hero::after { content:'04'; position:absolute; right:40px; top:50%; transform:translateY(-50%); font-family:'Cormorant Garamond',serif; font-size:260px; font-weight:700; color:rgba(201,168,76,0.06); line-height:1; pointer-events:none; }
+  .hero-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .meta-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:var(--gold-pale); color:var(--accent); border:1px solid var(--gold-light); }
+  .award-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:linear-gradient(135deg,#fdf3dc,#f5e4b0); color:var(--accent); border:1px solid var(--gold); }
+  .project-title { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,4vw,58px); font-weight:700; line-height:1.15; color:var(--slate); max-width:700px; margin-bottom:20px; }
+  .project-subtitle { font-size:15px; color:var(--slate-mid); font-weight:300; line-height:1.75; max-width:620px; margin-bottom:28px; }
+  .hero-stats { display:flex; gap:36px; flex-wrap:wrap; margin-bottom:28px; }
+  .stat { border-left:2px solid var(--gold); padding-left:14px; }
+  .stat-val { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--slate); line-height:1; }
+  .stat-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-light); margin-top:3px; }
+  .read-paper-btn { display:inline-flex; align-items:center; gap:8px; padding:11px 24px; border:1.5px solid var(--gold); color:var(--gold-dim); border-radius:4px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; transition:all 0.2s; }
+  .read-paper-btn:hover { background:var(--gold); color:var(--warm-white); }
+
+  .content { max-width:1060px; margin:0 auto; padding:64px 60px; }
+  .section-block { margin-bottom:60px; }
+  .block-eyebrow { font-size:9.5px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .block-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--slate); margin-bottom:14px; line-height:1.25; }
+  .block-divider { width:48px; height:2px; background:linear-gradient(90deg,var(--gold),transparent); margin-bottom:20px; }
+  .block-text { font-size:14px; color:var(--slate-mid); line-height:1.85; font-weight:300; }
+  .block-text p { margin-bottom:12px; }
+  .block-text strong { color:var(--slate); font-weight:600; }
+  .block-text em { font-style:italic; color:var(--accent); }
+
+  /* TL;DR */
+  .tldr { background:var(--slate); border-radius:12px; padding:28px 32px; margin-bottom:60px; display:flex; gap:24px; align-items:flex-start; box-shadow:0 4px 24px rgba(46,54,66,0.2); }
+  .tldr-label { font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .tldr-text { font-size:14.5px; color:var(--gold-pale); line-height:1.75; font-weight:300; }
+  .tldr-text strong { color:#fff; font-weight:600; }
+  .tldr-icon { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; color:rgba(201,168,76,0.3); line-height:1; flex-shrink:0; }
+
+  /* CONTRADICTION VISUAL */
+  .contradiction-wrap { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:12px; padding:24px 28px; margin-top:20px; box-shadow:0 2px 12px rgba(201,168,76,0.08); }
+  .contradiction-title { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+  .theories-grid { display:grid; grid-template-columns:1fr auto 1fr; gap:16px; align-items:center; }
+  .theory-card { border-radius:8px; padding:16px 18px; }
+  .theory-card.increase { background:var(--green-light); border:1.5px solid rgba(45,122,79,0.25); }
+  .theory-card.decrease { background:rgba(192,57,43,0.07); border:1.5px solid rgba(192,57,43,0.2); }
+  .theory-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; margin-bottom:6px; }
+  .theory-card.increase .theory-label { color:var(--green); }
+  .theory-card.decrease .theory-label { color:#c0392b; }
+  .theory-text { font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .vs-badge { font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--gold); text-align:center; }
+  .resolution-box { margin-top:16px; background:var(--gold-pale); border-left:3px solid var(--gold); border-radius:0 8px 8px 0; padding:12px 16px; font-size:13px; color:var(--slate-mid); line-height:1.6; }
+  .resolution-box strong { color:var(--slate); font-weight:600; }
+
+  /* STUDIES */
+  .study-block { margin-bottom:24px; background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; padding:20px; box-shadow:0 2px 10px rgba(201,168,76,0.07); }
+  .study-header { display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }
+  .study-num { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:rgba(201,168,76,0.2); line-height:1; }
+  .study-tag { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); }
+  .study-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; color:var(--slate); margin-bottom:10px; }
+  .study-rows { display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
+  .study-row { display:flex; gap:8px; }
+  .study-label { font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); width:62px; flex-shrink:0; padding-top:2px; }
+  .study-val { font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .study-insight { padding:9px 12px; background:var(--gold-pale); border-radius:6px; border-left:3px solid var(--gold); font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .study-insight strong { color:var(--slate); font-weight:600; }
+
+  /* AB TEST VISUAL */
+  .ab-wrap { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:16px; }
+  .ad-card { border-radius:8px; overflow:hidden; border:1.5px solid var(--gold-light); }
+  .ad-label { font-size:9px; font-weight:700; letter-spacing:0.1em; text-transform:uppercase; padding:6px 12px; }
+  .ad-card.control .ad-label { background:rgba(100,110,130,0.1); color:var(--slate-light); }
+  .ad-card.treatment .ad-label { background:rgba(45,122,79,0.12); color:var(--green); }
+  .ad-body { padding:14px 16px; background:var(--warm-white); }
+  .ad-text { font-size:13px; color:var(--slate-mid); line-height:1.6; font-weight:300; }
+  .ad-text .highlight { background:rgba(45,122,79,0.15); color:var(--green); font-weight:600; padding:0 3px; border-radius:3px; }
+  .ad-result { margin-top:10px; font-size:11px; font-weight:600; color:var(--green); }
+
+  /* CONCLUSION */
+  .conclusion-box { background:var(--gold-pale); border:1.5px solid var(--gold-light); border-radius:10px; padding:22px 28px; border-left:4px solid var(--gold); margin-bottom:20px; }
+  .conclusion-box p { font-size:14px; color:var(--slate-mid); line-height:1.75; font-weight:300; }
+  .conclusion-box strong { color:var(--slate); font-weight:600; }
+
+  /* IMPLICATION */
+  .impl-card { background:var(--slate); border-radius:12px; padding:24px 28px; box-shadow:0 4px 20px rgba(46,54,66,0.2); }
+  .impl-eyebrow { font-size:9.5px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .impl-title { font-family:'Cormorant Garamond',serif; font-size:20px; font-weight:700; color:var(--gold-pale); margin-bottom:12px; }
+  .impl-text { font-size:13.5px; color:var(--gold-pale); line-height:1.7; font-weight:300; }
+  .impl-text strong { color:#fff; font-weight:600; }
+  .nudge-tags { display:flex; gap:10px; flex-wrap:wrap; margin-top:14px; }
+  .nudge-tag { font-size:10px; font-weight:600; padding:4px 12px; border-radius:20px; background:rgba(255,255,255,0.08); color:var(--gold-light); border:1px solid rgba(201,168,76,0.3); letter-spacing:0.04em; }
+
+  .project-nav { border-top:1px solid var(--gold-light); padding:36px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .proj-nav-link { display:flex; flex-direction:column; gap:4px; text-decoration:none; }
+  .proj-nav-label { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--slate-light); }
+  .proj-nav-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; color:var(--slate); transition:color 0.2s; }
+  .proj-nav-link:hover .proj-nav-title { color:var(--gold); }
+
+  footer { background:var(--slate); padding:24px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .footer-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--gold-light); }
+  .footer-copy { font-size:11px; color:var(--slate-light); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+  .fade-in { animation:fadeUp 0.7s ease both; }
+  .fade-in-2 { animation:fadeUp 0.7s ease 0.15s both; }
+  .fade-in-3 { animation:fadeUp 0.7s ease 0.3s both; }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Jinyan <span>Xiang</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#research">Academia</a></li>
+    <li><a href="index.html#industry">Industry</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="index.html" style="color:var(--gold);">← Portfolio</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="project-hero">
+  <div class="hero-meta fade-in">
+    <span class="meta-pill">Choice Mindset</span>
+    <span class="meta-pill">Pro-Environmental Behaviors</span>
+    <span class="meta-pill">Sustainability</span>
+    <span class="award-pill">🏆 Best Paper · AMA 2026</span>
+    <span class="award-pill">🏆 Best Talk · SCP 2022</span>
+  </div>
+  <h1 class="project-title fade-in-2">Choosing to Make a Difference:<br>How Choice Mindset Shapes Environmental Support</h1>
+  <p class="project-subtitle fade-in-2">Reveals how choice mindset — the salience of choice in people's minds — affects support for the environment, and what this means for how policymakers, NGOs, and companies can nudge people toward environmental action.</p>
+  <div class="hero-stats fade-in-3">
+    <div class="stat"><div class="stat-val">4</div><div class="stat-label">Studies</div></div>
+    <div class="stat"><div class="stat-val">+12%</div><div class="stat-label">Boost in Ad Click-Through Rate</div></div>
+    <div class="stat"><div class="stat-val">36,978</div><div class="stat-label">Users Reached in Field Experiment</div></div>
+    <div class="stat"><div class="stat-val">50</div><div class="stat-label">US States Analyzed</div></div>
+  </div>
+  <a href="https://www.dropbox.com/scl/fi/5d9hnm7rdjv3pueca139h/Choose-to-Make-a-Difference.pdf?rlkey=p6qoupa16l03ss0xlo9l672af&st=mtyhctv3&dl=0" target="_blank" class="read-paper-btn fade-in-3">Read Full Paper →</a>
+</div>
+
+<div class="content">
+
+  <!-- TL;DR -->
+  <div class="tldr reveal">
+    <div class="tldr-icon">✦</div>
+    <div>
+      <div class="tldr-label">TL;DR</div>
+      <div class="tldr-text">
+        The more salient choice feels to people, <strong>the more they support environmental causes</strong> — donating more, endorsing environmental taxes, and clicking environmental ads more. Adding just two words ("choose to") to an ad boosted clicks by <strong>12%</strong>. A low-cost, scalable nudge for governments, NGOs, and brands.
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKGROUND -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Background</div>
+    <div class="block-title">A Theoretical Contradiction</div>
+    <div class="block-divider"></div>
+    <div class="block-text">
+      <p>Prior theories make <strong>conflicting predictions</strong> about whether making choice salient — <em>choice mindset</em>, the extent to which people construe actions as choices — would increase or decrease environmental support. This research reconciles the contradiction.</p>
+    </div>
+
+    <div class="contradiction-wrap">
+      <div class="contradiction-title">Competing Theoretical Predictions</div>
+      <div class="theories-grid">
+        <div class="theory-card increase">
+          <div class="theory-label">↑ Predicts Increase</div>
+          <div class="theory-text">Choice mindset activates a sense of personal agency and autonomy — making people feel empowered to act and more motivated to support causes.</div>
+        </div>
+        <div class="vs-badge">VS</div>
+        <div class="theory-card decrease">
+          <div class="theory-label">↓ Predicts Decrease</div>
+          <div class="theory-text">Choice mindset triggers individualistic thinking — reducing concern for collective problems like the environment and lowering prosocial motivation.</div>
+        </div>
+      </div>
+      <div class="resolution-box"><strong>This research shows:</strong> choice mindset consistently <strong>increases</strong> environmental support — resolving the contradiction across survey, donation, and field experiment settings.</div>
+    </div>
+  </div>
+
+  <!-- STUDIES -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Methodology &amp; Results</div>
+    <div class="block-title">Three Studies</div>
+    <div class="block-divider"></div>
+
+    <!-- STUDY 1 -->
+    <div class="study-block">
+      <div class="study-header"><div class="study-num">01</div><div class="study-tag">Survey</div></div>
+      <div class="study-title">Environmental Tax Support</div>
+      <div class="study-rows">
+        <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Nationally representative sample — stratified proportional sampling by gender, age, and ethnicity</div></div>
+        <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Pearson correlation & OLS regression</div></div>
+      </div>
+      <div class="study-insight">There is a <strong>significant positive correlation</strong> between perceived choice salience and support for environmental taxes — including disposable cup charges, plastic bag fees, and gas tax increases.</div>
+    </div>
+
+    <!-- STUDY 2 -->
+    <div class="study-block">
+      <div class="study-header"><div class="study-num">02</div><div class="study-tag">Survey</div></div>
+      <div class="study-title">Environmental Donations</div>
+      <div class="study-rows">
+        <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Amazon Mechanical Turk respondents</div></div>
+        <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Tobit regression — to address the zero-inflated, non-negative, continuous nature of donation amount</div></div>
+      </div>
+      <div class="study-insight"><strong>The more salient choice feels, the more people donate</strong> to environmental advocacy groups — a dose-response relationship between choice mindset and environmental giving.</div>
+    </div>
+
+    <!-- STUDY 3 -->
+    <div class="study-block">
+      <div class="study-header"><div class="study-num">03</div><div class="study-tag">Field Experiment · Facebook A/B Test</div></div>
+      <div class="study-title">Environmental Ad Click-Through</div>
+      <div class="study-rows">
+        <div class="study-row"><div class="study-label">Design</div><div class="study-val">6-day Facebook A/B test, $44/day budget, UK users aged 18–64, newsfeed placement only</div></div>
+        <div class="study-row"><div class="study-label">Reach</div><div class="study-val">36,978 users · 1,925 link clicks · 131 likes · 80 shares</div></div>
+        <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Two-sample proportion test comparing click-through rates</div></div>
+      </div>
+      <div class="study-insight">Adding just two words — <strong>"choose to"</strong> — to an environmental ad resulted in a <strong>12% boost in click-through rate</strong>. Pre-tested to show no difference in perceived attractiveness.</div>
+
+      <!-- A/B AD VISUAL -->
+      <div class="ab-wrap">
+        <div class="ad-card control">
+          <div class="ad-label">Version A — Control</div>
+          <div class="ad-body">
+            <div class="ad-text">
+              🌱 &nbsp;"Make a difference. Support environmental causes today."
+            </div>
+            <div class="ad-result">Baseline click-through rate</div>
+          </div>
+        </div>
+        <div class="ad-card treatment">
+          <div class="ad-label">Version B — Treatment</div>
+          <div class="ad-body">
+            <div class="ad-text">
+              🌱 &nbsp;"<span class="highlight">Choose to</span> make a difference. Support environmental causes today."
+            </div>
+            <div class="ad-result">↑ +12% click-through rate</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- STUDY 4 -->
+    <div class="study-block">
+      <div class="study-header"><div class="study-num">04</div><div class="study-tag">Google Trends · Archival Data</div></div>
+      <div class="study-title">State-Level Choice Interest & Eco-Friendliness</div>
+      <div class="study-rows">
+        <div class="study-row"><div class="study-label">Data</div><div class="study-val">Five-year Google Trends data for choice-related searches across all categories (Jan 2015 – Dec 2020, collected Dec 2022); eco-friendliness scores for all 50 US states in 2020 — composite index based on energy, water & gasoline consumption per capita, alternative fuel vehicles, solar panels installed, and green commuting rates (Kiernan, 2021)</div></div>
+        <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Stepwise regression — state-level choice search interest predicting eco-friendliness score, controlling for demographic and economic covariates</div></div>
+      </div>
+      <div class="study-insight">States where residents search more for choice-related terms are <strong>significantly more eco-friendly</strong> — even after controlling for covariates. The higher a state's interest in choice, the higher its residents' average eco-friendliness score (0–100 scale).</div>
+    </div>
+
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Conclusion</div>
+    <div class="block-title">What This Means</div>
+    <div class="block-divider"></div>
+    <div class="conclusion-box">
+      <p>The more salient the idea of choice in people's minds, <strong>the more likely they are to support the environment</strong> — endorsing environmental initiatives, donating to environmental causes, and actively engaging with environmental content.</p>
+    </div>
+
+    <div class="impl-card" style="margin-top:20px;">
+      <div class="impl-eyebrow">Policy Implication</div>
+      <div class="impl-title">A Smart, Low-Cost Nudge</div>
+      <div class="impl-text">Subtly enhancing the salience of choice in ads or communication messages is <strong>cost-effective and easily implementable</strong> — requiring no financial incentives, no regulatory change, and no major campaign overhaul. Just two words.</div>
+      <div class="nudge-tags">
+        <span class="nudge-tag">✓ Governments</span>
+        <span class="nudge-tag">✓ NGOs</span>
+        <span class="nudge-tag">✓ Brands</span>
+        <span class="nudge-tag">✓ Ad Campaigns</span>
+        <span class="nudge-tag">✓ Policy Messaging</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- PROJECT NAV -->
+<div class="project-nav">
+  <a href="project-3.html" class="proj-nav-link">
+    <div class="proj-nav-label">← Previous</div>
+    <div class="proj-nav-title">What Do People Think About When They Talk About Inequality?</div>
+  </a>
+  <a href="project-5.html" class="proj-nav-link" style="text-align:right;">
+    <div class="proj-nav-label">Next Project →</div>
+    <div class="proj-nav-title">Virtual Gift Consumption</div>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-name">Jinyan Xiang, Ph.D.</div>
+  <div class="footer-copy">© 2025 · All rights reserved</div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold:0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
