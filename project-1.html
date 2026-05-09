@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unequal Access to P2P Services — Jinyan Xiang, Ph.D.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ef; --warm-white: #fffdf9;
+    --gold: #c9a84c; --gold-light: #e8d5a3; --gold-pale: #f5edd8; --gold-dim: #a8863a;
+    --slate: #2e3642; --slate-mid: #4a5568; --slate-light: #718096;
+    --accent: #8b5e3c; --blue-dark: #2c5a9b; --blue-light: #8db5c8;
+    --red: #c0392b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--slate); }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 60px; background:rgba(250,246,239,0.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+  }
+  .nav-name { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--slate); text-decoration:none; }
+  .nav-name span { color:var(--gold); }
+  .nav-links { display:flex; gap:28px; list-style:none; align-items:center; }
+  .nav-links a { font-size:12px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-mid); text-decoration:none; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--gold); }
+
+  /* HERO */
+  .project-hero { padding:130px 60px 60px; border-bottom:1px solid var(--gold-light); position:relative; overflow:hidden; }
+  .project-hero::after {
+    content:'01'; position:absolute; right:40px; top:50%; transform:translateY(-50%);
+    font-family:'Cormorant Garamond',serif; font-size:260px; font-weight:700;
+    color:rgba(201,168,76,0.06); line-height:1; pointer-events:none;
+  }
+  .hero-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .meta-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:var(--gold-pale); color:var(--accent); border:1px solid var(--gold-light); }
+  .award-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:linear-gradient(135deg,#fdf3dc,#f5e4b0); color:var(--accent); border:1px solid var(--gold); }
+  .project-title { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,4vw,58px); font-weight:700; line-height:1.15; color:var(--slate); max-width:700px; margin-bottom:20px; }
+  .project-subtitle { font-size:15px; color:var(--slate-mid); font-weight:300; line-height:1.75; max-width:620px; margin-bottom:28px; }
+  .hero-stats { display:flex; gap:36px; flex-wrap:wrap; margin-bottom:28px; }
+  .stat { border-left:2px solid var(--gold); padding-left:14px; }
+  .stat-val { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--slate); line-height:1; }
+  .stat-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-light); margin-top:3px; }
+  .read-paper-btn { display:inline-flex; align-items:center; gap:8px; padding:11px 24px; border:1.5px solid var(--gold); color:var(--gold-dim); border-radius:4px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; transition:all 0.2s; }
+  .read-paper-btn:hover { background:var(--gold); color:var(--warm-white); }
+
+  /* CONTENT */
+  .content { max-width:1060px; margin:0 auto; padding:64px 60px; }
+  .section-block { margin-bottom:60px; }
+  .block-eyebrow { font-size:9.5px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .block-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--slate); margin-bottom:14px; line-height:1.25; }
+  .block-divider { width:48px; height:2px; background:linear-gradient(90deg,var(--gold),transparent); margin-bottom:20px; }
+  .block-text { font-size:14px; color:var(--slate-mid); line-height:1.85; font-weight:300; max-width:720px; }
+  .block-text p { margin-bottom:12px; }
+  .block-text strong { color:var(--slate); font-weight:600; }
+
+  /* TL;DR */
+  .tldr {
+    background:var(--slate); border-radius:12px; padding:28px 32px;
+    margin-bottom:60px; display:flex; gap:24px; align-items:flex-start;
+    box-shadow:0 4px 24px rgba(46,54,66,0.2);
+  }
+  .tldr-label { font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .tldr-text { font-size:14.5px; color:var(--gold-pale); line-height:1.75; font-weight:300; }
+  .tldr-text strong { color:#fff; font-weight:600; }
+  .tldr-icon { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; color:rgba(201,168,76,0.3); line-height:1; flex-shrink:0; }
+
+  /* HYPOTHESES */
+  .hyp-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-top:20px; }
+  .hyp-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; padding:16px 20px; box-shadow:0 2px 10px rgba(201,168,76,0.07); display:flex; gap:14px; align-items:flex-start; }
+  .hyp-num { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:rgba(201,168,76,0.25); line-height:1; flex-shrink:0; }
+  .hyp-text { font-size:13px; color:var(--slate-mid); line-height:1.65; font-weight:300; }
+  .hyp-text strong { color:var(--slate); font-weight:600; }
+
+  /* MECHANISM VISUAL */
+  .mechanism-wrap { margin-top:24px; background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:12px; padding:28px 32px; box-shadow:0 2px 16px rgba(201,168,76,0.08); }
+  .mechanism-title { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:20px; }
+  .mechanism-flow { display:flex; align-items:center; gap:0; flex-wrap:nowrap; justify-content:center; }
+  .mech-box { background:var(--cream); border:1.5px solid var(--gold-light); border-radius:8px; padding:12px 16px; text-align:center; min-width:130px; }
+  .mech-box.highlight { background:var(--slate); border-color:var(--slate); }
+  .mech-box.highlight .mech-label { color:var(--gold-pale); }
+  .mech-box.highlight .mech-sub { color:rgba(245,237,216,0.6); }
+  .mech-label { font-size:12px; font-weight:600; color:var(--slate); line-height:1.3; }
+  .mech-sub { font-size:10px; color:var(--slate-light); margin-top:3px; }
+  .mech-arrow { display:flex; flex-direction:column; align-items:center; padding:0 8px; flex-shrink:0; }
+  .mech-arrow-line { width:32px; height:2px; background:linear-gradient(90deg,var(--gold-light),var(--gold)); }
+  .mech-arrow-tip { width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:6px solid var(--gold); }
+  .mech-arrow-label { font-size:9px; color:var(--slate-light); margin-top:4px; font-style:italic; text-align:center; white-space:nowrap; }
+  .mech-negative { color:var(--red); font-size:9.5px; font-weight:600; margin-top:4px; }
+
+  /* STUDIES */
+  .studies-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:20px; }
+  .study-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; padding:20px 20px; box-shadow:0 2px 10px rgba(201,168,76,0.07); }
+  .study-header { display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }
+  .study-num { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:rgba(201,168,76,0.2); line-height:1; }
+  .study-tag { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); }
+  .study-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; color:var(--slate); margin-bottom:10px; }
+  .study-rows { display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
+  .study-row { display:flex; gap:8px; align-items:flex-start; }
+  .study-label { font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); width:62px; flex-shrink:0; padding-top:2px; }
+  .study-val { font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .study-insight { padding:9px 12px; background:var(--gold-pale); border-radius:6px; border-left:3px solid var(--gold); font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .study-insight strong { color:var(--slate); font-weight:600; }
+
+  /* IMPLICATIONS */
+  .impl-list { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:20px; }
+  .impl-item { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(201,168,76,0.07); display:flex; flex-direction:column; }
+  .impl-visual { background:var(--cream); border-bottom:1px solid var(--gold-light); padding:16px; display:flex; align-items:center; justify-content:center; }
+  .impl-visual svg { width:100%; height:auto; display:block; }
+  .impl-content { padding:16px 18px; }
+  .impl-title { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:6px; }
+  .impl-text { font-size:12.5px; color:var(--slate-mid); line-height:1.6; font-weight:300; }
+  .impl-text strong { color:var(--slate); font-weight:600; }
+
+  /* CONCLUSION */
+  .conclusion-box { background:var(--gold-pale); border:1.5px solid var(--gold-light); border-radius:10px; padding:22px 28px; border-left:4px solid var(--gold); }
+  .conclusion-box p { font-size:14px; color:var(--slate-mid); line-height:1.75; font-weight:300; }
+  .conclusion-box strong { color:var(--slate); font-weight:600; }
+
+  /* PROJECT NAV */
+  .project-nav { border-top:1px solid var(--gold-light); padding:36px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .proj-nav-link { display:flex; flex-direction:column; gap:4px; text-decoration:none; }
+  .proj-nav-label { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--slate-light); }
+  .proj-nav-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; color:var(--slate); transition:color 0.2s; }
+  .proj-nav-link:hover .proj-nav-title { color:var(--gold); }
+
+  footer { background:var(--slate); padding:24px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .footer-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--gold-light); }
+  .footer-copy { font-size:11px; color:var(--slate-light); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+  .fade-in { animation:fadeUp 0.7s ease both; }
+  .fade-in-2 { animation:fadeUp 0.7s ease 0.15s both; }
+  .fade-in-3 { animation:fadeUp 0.7s ease 0.3s both; }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Jinyan <span>Xiang</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#research">Academia</a></li>
+    <li><a href="index.html#industry">Industry</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="index.html" style="color:var(--gold);">← Portfolio</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="project-hero">
+  <div class="hero-meta fade-in">
+    <span class="meta-pill">Sharing Economy</span>
+    <span class="meta-pill">Inequality</span>
+    <span class="meta-pill">Discrimination</span>
+    <span class="award-pill">🏆 Nicosia Award · ACR × Seth Foundation 2022</span>
+    <span class="award-pill">📄 Journal of Marketing</span>
+  </div>
+  <h1 class="project-title fade-in-2">Unequal Access to<br>Peer-to-Peer Services</h1>
+  <p class="project-subtitle fade-in-2">Uncovers how peer providers screen consumers based on regional economic inequality — through the lens of interpersonal trust — and what platforms can do to reduce discriminatory barriers.</p>
+  <div class="hero-stats fade-in-3">
+    <div class="stat"><div class="stat-val">4</div><div class="stat-label">Studies</div></div>
+    <div class="stat"><div class="stat-val">54k+</div><div class="stat-label">Transactions</div></div>
+    <div class="stat"><div class="stat-val">17%</div><div class="stat-label">Loan Drop / 0.05 Gini ↑</div></div>
+    <div class="stat"><div class="stat-val">7.3×</div><div class="stat-label">Higher Insurance Likelihood</div></div>
+  </div>
+  <a href="https://journals.sagepub.com/doi/10.1177/00222429261417972" target="_blank" class="read-paper-btn fade-in-3">Read Published Paper →</a>
+</div>
+
+<div class="content">
+
+  <!-- TL;DR -->
+  <div class="tldr reveal">
+    <div class="tldr-icon">✦</div>
+    <div>
+      <div class="tldr-label">TL;DR</div>
+      <div class="tldr-text">
+        Peer providers in the sharing economy are <strong>significantly less willing to serve consumers from high-inequality regions</strong> — not because of who those consumers are, but because of where they're from. The mechanism: high inequality → inferred low SES → lower perceived trustworthiness → discrimination. Platforms can counteract this with <strong>smarter matching algorithms and similarity score displays.</strong>
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKGROUND -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Background</div>
+    <div class="block-title">The Problem</div>
+    <div class="block-divider"></div>
+    <div class="block-text">
+      <p>The sharing economy's rapid expansion has not translated into equal access for all consumers. Many face systematic screening by peer providers based on race, gender, sexual orientation, and other demographic characteristics. This research asks: <strong>does a consumer's regional economic inequality add another layer of vulnerability?</strong></p>
+      <p>Location information is openly displayed on platform profiles — city and state on Airbnb and Turo, state alone on Lending Club and Prosper. This creates a new, overlooked channel for discrimination.</p>
+    </div>
+  </div>
+
+  <!-- RESEARCH QUESTION + HYPOTHESES -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Research Question & Hypotheses</div>
+    <div class="block-title">How Does Regional Inequality Shape Access?</div>
+    <div class="block-divider"></div>
+    <div class="block-text"><p>How does economic inequality in a consumer's region — from local community to national level — influence their access to peer-to-peer services?</p></div>
+    <div class="hyp-grid">
+      <div class="hyp-card">
+        <div class="hyp-num">H1</div>
+        <div class="hyp-text">Providers are <strong>less willing to serve consumers</strong> from high- vs. low-inequality regions.</div>
+      </div>
+      <div class="hyp-card">
+        <div class="hyp-num">H2</div>
+        <div class="hyp-text">This effect is driven by <strong>lower perceived SES → lower trust</strong> for consumers from high-inequality regions.</div>
+      </div>
+    </div>
+
+    <!-- MECHANISM VISUAL -->
+    <div class="mechanism-wrap" style="margin-top:20px;">
+      <div class="mechanism-title">Proposed Mechanism (Serial Mediation)</div>
+      <div class="mechanism-flow">
+        <div class="mech-box highlight">
+          <div class="mech-label">High Regional<br>Inequality</div>
+          <div class="mech-sub">Gini index ↑</div>
+        </div>
+        <div class="mech-arrow">
+          <div style="display:flex;align-items:center;">
+            <div class="mech-arrow-line"></div>
+            <div class="mech-arrow-tip"></div>
+          </div>
+          <div class="mech-arrow-label">infers</div>
+        </div>
+        <div class="mech-box">
+          <div class="mech-label">Lower Perceived<br>SES</div>
+          <div class="mech-sub">Socioeconomic status</div>
+        </div>
+        <div class="mech-arrow">
+          <div style="display:flex;align-items:center;">
+            <div class="mech-arrow-line"></div>
+            <div class="mech-arrow-tip"></div>
+          </div>
+          <div class="mech-arrow-label">reduces</div>
+        </div>
+        <div class="mech-box">
+          <div class="mech-label">Lower Perceived<br>Trustworthiness</div>
+          <div class="mech-sub">Risk perception ↑</div>
+        </div>
+        <div class="mech-arrow">
+          <div style="display:flex;align-items:center;">
+            <div class="mech-arrow-line"></div>
+            <div class="mech-arrow-tip"></div>
+          </div>
+          <div class="mech-arrow-label">leads to</div>
+        </div>
+        <div class="mech-box highlight">
+          <div class="mech-label">Discrimination</div>
+          <div class="mech-negative">Willingness ↓</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDIES -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Methodology</div>
+    <div class="block-title">Four Studies</div>
+    <div class="block-divider"></div>
+    <div class="studies-grid">
+
+      <div class="study-card">
+        <div class="study-header"><div class="study-num">01</div><div class="study-tag">Historic Analysis</div></div>
+        <div class="study-title">P2P Lending Platform</div>
+        <div class="study-rows">
+          <div class="study-row"><div class="study-label">Data</div><div class="study-val">54k+ transactions, 48 US states, 2010–2014</div></div>
+          <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Fixed-effect robust linear model & quantile regression</div></div>
+        </div>
+        <div class="study-insight">For every 0.05-point rise in Gini, peer lenders reduce the average loan amount by <strong>approximately 17%</strong>.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-header"><div class="study-num">02</div><div class="study-tag">Survey</div></div>
+        <div class="study-title">Peer Hosts (Airbnb & Turo)</div>
+        <div class="study-rows">
+          <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Experienced peer providers, Cloud Research</div></div>
+          <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Weighting/raking, correlation & regression</div></div>
+        </div>
+        <div class="study-insight">Hosts were <strong>significantly less willing</strong> to accept guests from regions of greater economic inequality.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-header"><div class="study-num">03</div><div class="study-tag">Experiment</div></div>
+        <div class="study-title">Insurance Selection Task</div>
+        <div class="study-rows">
+          <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Prolific respondents</div></div>
+          <div class="study-row"><div class="study-label">Design</div><div class="study-val">Within-subject, manipulated Gini level</div></div>
+          <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Repeated-measure ANOVA, mixed-effect ordinal regression</div></div>
+        </div>
+        <div class="study-insight">Hosts were <strong>7.3× more likely</strong> to select higher-premium insurance for guests from high-inequality countries.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-header"><div class="study-num">04</div><div class="study-tag">Cognitive Protocol</div></div>
+        <div class="study-title">Tool Rental Platform</div>
+        <div class="study-rows">
+          <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Amazon MTurk respondents</div></div>
+          <div class="study-row"><div class="study-label">Design</div><div class="study-val">Between-subject experiment + open-ended thought protocol</div></div>
+          <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Content coding, ANOVA, serial mediation</div></div>
+        </div>
+        <div class="study-insight">Full serial mediation via <strong>SES inference → perceived trustworthiness</strong> confirmed.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Conclusion</div>
+    <div class="block-title">What This Means</div>
+    <div class="block-divider"></div>
+    <div class="conclusion-box">
+      <p>Despite explicit anti-discrimination policies, these findings confirm that <strong>regional economic inequality is a new, overlooked axis of discrimination</strong> in the sharing economy — underscoring the urgent need for platforms and regulators to act beyond current demographic-focused frameworks.</p>
+    </div>
+  </div>
+
+  <!-- IMPLICATIONS -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Managerial Implications</div>
+    <div class="block-title">What Platforms Can Do</div>
+    <div class="block-divider"></div>
+    <div class="impl-list">
+
+      <!-- IMPLICATION 1 -->
+      <div class="impl-item">
+        <div class="impl-visual">
+          <svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg">
+            <circle cx="52" cy="62" r="36" fill="#2e3642"/>
+            <text x="52" y="57" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="#e8d5a3" font-weight="700">PROVIDER</text>
+            <text x="52" y="70" text-anchor="middle" font-family="DM Sans" font-size="7" fill="rgba(245,237,216,0.5)">host / lender</text>
+            <circle cx="208" cy="62" r="36" fill="#2e3642"/>
+            <text x="208" y="57" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="#e8d5a3" font-weight="700">CONSUMER</text>
+            <text x="208" y="70" text-anchor="middle" font-family="DM Sans" font-size="7" fill="rgba(245,237,216,0.5)">guest / borrower</text>
+            <rect x="100" y="50" width="60" height="24" rx="12" fill="#c9a84c"/>
+            <text x="130" y="66" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#2e3642" font-weight="700">85% Match</text>
+            <line x1="88" y1="62" x2="100" y2="62" stroke="#c9a84c" stroke-width="1.5"/>
+            <line x1="160" y1="62" x2="172" y2="62" stroke="#c9a84c" stroke-width="1.5"/>
+            <rect x="16" y="104" width="72" height="15" rx="4" fill="rgba(201,168,76,0.1)" stroke="#e8d5a3" stroke-width="0.8"/>
+            <text x="52" y="115" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#a8863a">interests · history</text>
+            <rect x="172" y="104" width="72" height="15" rx="4" fill="rgba(201,168,76,0.1)" stroke="#e8d5a3" stroke-width="0.8"/>
+            <text x="208" y="115" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#a8863a">profile · preferences</text>
+            <text x="130" y="135" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#718096" font-style="italic">Similarity score surfaces shared attributes</text>
+          </svg>
+        </div>
+        <div class="impl-content">
+          <div class="impl-title">Enhanced Matching Algorithm</div>
+          <div class="impl-text">Incorporate self-disclosed provider and consumer information into similarity scores — complementing existing preference and booking history data. <strong>Use with caution</strong> around demographic features to avoid introducing new biases.</div>
+        </div>
+      </div>
+
+      <!-- IMPLICATION 2 -->
+      <div class="impl-item">
+        <div class="impl-visual">
+          <svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="12" width="104" height="116" rx="8" fill="#2e3642"/>
+            <text x="60" y="28" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#718096" font-weight="700" letter-spacing="0.8">WITHOUT</text>
+            <rect x="18" y="34" width="84" height="40" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+            <circle cx="34" cy="51" r="9" fill="#4a5568"/>
+            <rect x="48" y="46" width="40" height="5" rx="2.5" fill="#4a5568"/>
+            <rect x="48" y="55" width="28" height="4" rx="2" fill="#4a5568"/>
+            <rect x="18" y="80" width="84" height="36" rx="5" fill="rgba(192,57,43,0.18)" stroke="#c0392b" stroke-width="1.2"/>
+            <text x="60" y="97" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#c0392b" font-weight="600">📍 High-Inequality</text>
+            <text x="60" y="109" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#c0392b">Region flagged</text>
+            <line x1="116" y1="70" x2="132" y2="70" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <polygon points="132,66 142,70 132,74" fill="#c9a84c"/>
+            <rect x="148" y="12" width="104" height="116" rx="8" fill="#2e3642" stroke="#c9a84c" stroke-width="1.2"/>
+            <text x="200" y="28" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#c9a84c" font-weight="700" letter-spacing="0.8">WITH SCORE</text>
+            <rect x="158" y="34" width="84" height="40" rx="5" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.08)" stroke-width="1"/>
+            <circle cx="174" cy="51" r="9" fill="#4a5568"/>
+            <rect x="188" y="46" width="40" height="5" rx="2.5" fill="#4a5568"/>
+            <rect x="188" y="55" width="28" height="4" rx="2" fill="#4a5568"/>
+            <rect x="158" y="80" width="84" height="36" rx="5" fill="rgba(201,168,76,0.15)" stroke="#c9a84c" stroke-width="1.2"/>
+            <text x="200" y="97" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#c9a84c" font-weight="600">✦ 85% Similarity</text>
+            <text x="200" y="109" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#c9a84c">Match shown instead</text>
+          </svg>
+        </div>
+        <div class="impl-content">
+          <div class="impl-title">Similarity Score Display</div>
+          <div class="impl-text">Surface a visible <strong>provider–consumer similarity score</strong> to draw attention away from bias-susceptible signals like location — and help discrimination-prone consumers overcome the cold-start problem by securing initial reviews.</div>
+        </div>
+      </div>
+
+      <!-- IMPLICATION 3 -->
+      <div class="impl-item">
+        <div class="impl-visual">
+          <svg viewBox="0 0 260 140" xmlns="http://www.w3.org/2000/svg">
+            <rect x="8" y="12" width="108" height="116" rx="8" fill="#2e3642"/>
+            <text x="62" y="28" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#718096" font-weight="700" letter-spacing="0.8">CURRENT LAW</text>
+            <line x1="18" y1="34" x2="106" y2="34" stroke="rgba(255,255,255,0.07)" stroke-width="1"/>
+            <text x="62" y="56" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#e8d5a3">Race · Gender</text>
+            <text x="62" y="72" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#e8d5a3">Religion · Age</text>
+            <text x="62" y="88" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="#e8d5a3">Sexual Orientation</text>
+            <text x="62" y="116" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#c0392b">✗ Region not covered</text>
+            <line x1="120" y1="70" x2="134" y2="70" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="3,3"/>
+            <polygon points="134,66 144,70 134,74" fill="#c9a84c"/>
+            <rect x="144" y="12" width="108" height="116" rx="8" fill="#2e3642" stroke="#c9a84c" stroke-width="1.2"/>
+            <text x="198" y="28" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#c9a84c" font-weight="700" letter-spacing="0.8">PROPOSED</text>
+            <line x1="154" y1="34" x2="242" y2="34" stroke="rgba(201,168,76,0.15)" stroke-width="1"/>
+            <text x="198" y="56" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#e8d5a3">Race · Gender</text>
+            <text x="198" y="72" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#e8d5a3">Religion · Age</text>
+            <text x="198" y="88" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="#e8d5a3">Sexual Orientation</text>
+            <text x="198" y="115" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="#c9a84c" font-weight="700">+ Regional Inequality ✦</text>
+          </svg>
+        </div>
+        <div class="impl-content">
+          <div class="impl-title">Regulatory Extension</div>
+          <div class="impl-text">Existing anti-discrimination frameworks focus on demographics. Regulators should <strong>extend protections to region-based screening</strong> — a currently unaddressed grey area that disproportionately harms consumers from economically unequal regions.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- PROJECT NAV -->
+<div class="project-nav">
+  <a href="index.html" class="proj-nav-link">
+    <div class="proj-nav-label">← Back</div>
+    <div class="proj-nav-title">All Projects</div>
+  </a>
+  <a href="project-2.html" class="proj-nav-link" style="text-align:right;">
+    <div class="proj-nav-label">Next Project →</div>
+    <div class="proj-nav-title">How Economic Inequality Shapes Education Decisions</div>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-name">Jinyan Xiang, Ph.D.</div>
+  <div class="footer-copy">© 2025 · All rights reserved</div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold:0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>
