@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Education Decisions — Jinyan Xiang, Ph.D.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #faf6ef; --warm-white: #fffdf9;
+    --gold: #c9a84c; --gold-light: #e8d5a3; --gold-pale: #f5edd8; --gold-dim: #a8863a;
+    --slate: #2e3642; --slate-mid: #4a5568; --slate-light: #718096;
+    --accent: #8b5e3c; --blue-dark: #2c5a9b; --blue-light: #8db5c8; --red: #c0392b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--slate); }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 60px; background:rgba(250,246,239,0.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+  }
+  .nav-name { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--slate); text-decoration:none; }
+  .nav-name span { color:var(--gold); }
+  .nav-links { display:flex; gap:28px; list-style:none; align-items:center; }
+  .nav-links a { font-size:12px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-mid); text-decoration:none; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--gold); }
+
+  .project-hero { padding:130px 60px 60px; border-bottom:1px solid var(--gold-light); position:relative; overflow:hidden; }
+  .project-hero::after { content:'02'; position:absolute; right:40px; top:50%; transform:translateY(-50%); font-family:'Cormorant Garamond',serif; font-size:260px; font-weight:700; color:rgba(201,168,76,0.06); line-height:1; pointer-events:none; }
+  .hero-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .meta-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:var(--gold-pale); color:var(--accent); border:1px solid var(--gold-light); }
+  .award-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:linear-gradient(135deg,#fdf3dc,#f5e4b0); color:var(--accent); border:1px solid var(--gold); }
+  .project-title { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,4vw,58px); font-weight:700; line-height:1.15; color:var(--slate); max-width:700px; margin-bottom:20px; }
+  .project-subtitle { font-size:15px; color:var(--slate-mid); font-weight:300; line-height:1.75; max-width:620px; margin-bottom:28px; }
+  .hero-stats { display:flex; gap:36px; flex-wrap:wrap; margin-bottom:28px; }
+  .stat { border-left:2px solid var(--gold); padding-left:14px; }
+  .stat-val { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--slate); line-height:1; }
+  .stat-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-light); margin-top:3px; }
+  .read-paper-btn { display:inline-flex; align-items:center; gap:8px; padding:11px 24px; border:1.5px solid var(--gold); color:var(--gold-dim); border-radius:4px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; transition:all 0.2s; }
+  .read-paper-btn:hover { background:var(--gold); color:var(--warm-white); }
+
+  .content { max-width:1060px; margin:0 auto; padding:64px 60px; }
+  .section-block { margin-bottom:60px; }
+  .block-eyebrow { font-size:9.5px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .block-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--slate); margin-bottom:14px; line-height:1.25; }
+  .block-divider { width:48px; height:2px; background:linear-gradient(90deg,var(--gold),transparent); margin-bottom:20px; }
+  .block-text { font-size:14px; color:var(--slate-mid); line-height:1.85; font-weight:300; max-width:720px; }
+  .block-text p { margin-bottom:12px; }
+  .block-text strong { color:var(--slate); font-weight:600; }
+  .block-text em { font-style:italic; color:var(--accent); }
+
+  /* TL;DR */
+  .tldr { background:var(--slate); border-radius:12px; padding:28px 32px; margin-bottom:60px; display:flex; gap:24px; align-items:flex-start; box-shadow:0 4px 24px rgba(46,54,66,0.2); }
+  .tldr-label { font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .tldr-text { font-size:14.5px; color:var(--gold-pale); line-height:1.75; font-weight:300; }
+  .tldr-text strong { color:#fff; font-weight:600; }
+  .tldr-icon { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; color:rgba(201,168,76,0.3); line-height:1; flex-shrink:0; }
+
+  /* PROPOSITIONS */
+  .prop-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+  .prop-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; padding:22px 24px; box-shadow:0 2px 10px rgba(201,168,76,0.07); position:relative; overflow:hidden; }
+  .prop-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; background:linear-gradient(90deg,var(--gold),var(--gold-light)); }
+  .prop-label { font-size:9.5px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .prop-text { font-size:13.5px; color:var(--slate-mid); line-height:1.7; font-weight:300; }
+  .prop-text strong { color:var(--slate); font-weight:600; }
+  .prop-text em { font-style:italic; color:var(--accent); }
+
+  /* MECHANISM VISUAL */
+  .mechanism-wrap { margin-top:20px; background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:12px; padding:24px 28px; box-shadow:0 2px 12px rgba(201,168,76,0.08); }
+  .mechanism-title { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:18px; }
+  .mechanism-flow { display:flex; align-items:center; justify-content:center; gap:0; flex-wrap:nowrap; }
+  .mech-box { background:var(--cream); border:1.5px solid var(--gold-light); border-radius:8px; padding:10px 14px; text-align:center; min-width:120px; }
+  .mech-box.dark { background:var(--slate); border-color:var(--slate); }
+  .mech-label { font-size:11px; font-weight:600; color:var(--slate); line-height:1.3; }
+  .mech-box.dark .mech-label { color:var(--gold-pale); }
+  .mech-sub { font-size:9px; color:var(--slate-light); margin-top:2px; }
+  .mech-box.dark .mech-sub { color:rgba(245,237,216,0.5); }
+  .mech-arrow { display:flex; align-items:center; padding:0 6px; flex-shrink:0; }
+  .mech-arrow-inner { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .mech-line { width:28px; height:2px; background:linear-gradient(90deg,var(--gold-light),var(--gold)); }
+  .mech-tip { width:0; height:0; border-top:4px solid transparent; border-bottom:4px solid transparent; border-left:6px solid var(--gold); }
+  .mech-arrow-label { font-size:8.5px; color:var(--slate-light); font-style:italic; white-space:nowrap; }
+
+  /* STUDIES */
+  .studies-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:20px; }
+  .study-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; padding:20px; box-shadow:0 2px 10px rgba(201,168,76,0.07); }
+  .study-header { display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }
+  .study-num { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:rgba(201,168,76,0.2); line-height:1; }
+  .study-tag { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); }
+  .study-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; color:var(--slate); margin-bottom:10px; }
+  .study-rows { display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
+  .study-row { display:flex; gap:8px; }
+  .study-label { font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); width:62px; flex-shrink:0; padding-top:2px; }
+  .study-val { font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .study-insight { padding:9px 12px; background:var(--gold-pale); border-radius:6px; border-left:3px solid var(--gold); font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .study-insight strong { color:var(--slate); font-weight:600; }
+
+  /* STAT HIGHLIGHT */
+  .stat-highlight { display:inline-block; font-family:'Cormorant Garamond',serif; font-size:22px; font-weight:700; color:var(--gold); }
+
+  /* POLICY IMPLICATIONS */
+  .impl-list { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+  .impl-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(201,168,76,0.07); }
+  .impl-visual { background:var(--cream); border-bottom:1px solid var(--gold-light); padding:16px; display:flex; align-items:center; justify-content:center; }
+  .impl-visual svg { width:100%; height:auto; display:block; }
+  .impl-content { padding:18px 20px; }
+  .impl-title { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:6px; }
+  .impl-text { font-size:12.5px; color:var(--slate-mid); line-height:1.6; font-weight:300; }
+  .impl-text strong { color:var(--slate); font-weight:600; }
+
+  /* CONCLUSION */
+  .conclusion-box { background:var(--gold-pale); border:1.5px solid var(--gold-light); border-radius:10px; padding:22px 28px; border-left:4px solid var(--gold); }
+  .conclusion-box p { font-size:14px; color:var(--slate-mid); line-height:1.75; font-weight:300; }
+  .conclusion-box strong { color:var(--slate); font-weight:600; }
+
+  /* QUOTE */
+  .pull-quote { border-left:3px solid var(--gold); padding:16px 20px; margin:20px 0; background:var(--warm-white); border-radius:0 8px 8px 0; }
+  .pull-quote p { font-family:'Cormorant Garamond',serif; font-size:16px; font-style:italic; color:var(--slate-mid); line-height:1.65; }
+  .pull-quote cite { font-size:11px; color:var(--slate-light); margin-top:8px; display:block; font-style:normal; }
+
+  .project-nav { border-top:1px solid var(--gold-light); padding:36px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .proj-nav-link { display:flex; flex-direction:column; gap:4px; text-decoration:none; }
+  .proj-nav-label { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--slate-light); }
+  .proj-nav-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; color:var(--slate); transition:color 0.2s; }
+  .proj-nav-link:hover .proj-nav-title { color:var(--gold); }
+
+  footer { background:var(--slate); padding:24px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .footer-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--gold-light); }
+  .footer-copy { font-size:11px; color:var(--slate-light); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+  .fade-in { animation:fadeUp 0.7s ease both; }
+  .fade-in-2 { animation:fadeUp 0.7s ease 0.15s both; }
+  .fade-in-3 { animation:fadeUp 0.7s ease 0.3s both; }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Jinyan <span>Xiang</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#research">Academia</a></li>
+    <li><a href="index.html#industry">Industry</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="index.html" style="color:var(--gold);">← Portfolio</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="project-hero">
+  <div class="hero-meta fade-in">
+    <span class="meta-pill">Education Decision</span>
+    <span class="meta-pill">Economic Inequality</span>
+    <span class="award-pill">🎤 Presented at SCP Annual Conference</span>
+  </div>
+  <h1 class="project-title fade-in-2">How Economic Inequality<br>Shapes Education Decisions</h1>
+  <p class="project-subtitle fade-in-2">Investigates how societal economic inequality shapes college and major choices — through the lens of perceived education premium — and what this reveals about today's higher education crisis.</p>
+  <div class="hero-stats fade-in-3">
+    <div class="stat"><div class="stat-val">4</div><div class="stat-label">Studies</div></div>
+    <div class="stat"><div class="stat-val">3,141</div><div class="stat-label">Counties Analyzed</div></div>
+    <div class="stat"><div class="stat-val">17.82</div><div class="stat-label">Point Rise in Search Interest / 0.05 Gini ↑</div></div>
+    <div class="stat"><div class="stat-val">+20.5 pp</div><div class="stat-label">More Chose College under High Inequality</div></div>
+  </div>
+  <a href="https://www.dropbox.com/scl/fi/xf52vz0f8lbfrbaa0btg5/Inequality-and-Education.pdf?rlkey=oyqw429r0az7gkasucdc7300h&st=b2phsks0&dl=0" target="_blank" class="read-paper-btn fade-in-3">Read Full Paper →</a>
+</div>
+
+<div class="content">
+
+  <!-- TL;DR -->
+  <div class="tldr reveal">
+    <div class="tldr-icon">✦</div>
+    <div>
+      <div class="tldr-label">TL;DR</div>
+      <div class="tldr-text">
+        Rising economic inequality <strong>pushes people toward college and higher-earning majors</strong> — not because of genuine interest, but because inequality inflates the perceived return on education. This has direct implications for the <strong>student debt crisis</strong> and the <strong>collapse of the humanities</strong>.
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKGROUND -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Background</div>
+    <div class="block-title">Education Decisions in an Unequal World</div>
+    <div class="block-divider"></div>
+    <div class="pull-quote">
+      <p>"Behind these skyrocketing numbers, a multitude of young people and their families are making 'complex, vexing and consequential' education decisions."</p>
+      <cite>— Grewal, Meyer, & Mittal (2023)</cite>
+    </div>
+    <div class="block-text">
+      <p>Beyond micro- and meso-level factors — such as individual habitus and school and community environment — this research asks: <strong>how does a fundamental macroeconomic factor, namely societal economic inequality, shape individuals' educational decisions through the lens of perceived education premium?</strong></p>
+    </div>
+  </div>
+
+  <!-- PROPOSITIONS -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Propositions</div>
+    <div class="block-title">Two Pathways of Influence</div>
+    <div class="block-divider"></div>
+    <div class="prop-grid">
+      <div class="prop-card">
+        <div class="prop-label">College Decision</div>
+        <div class="prop-text">Economic inequality encourages individuals to <strong>pursue higher education</strong> by amplifying the <em>perceived education premium</em> — as inequality grows, the income gap between college and high school graduates widens in people's minds.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-label">Choice of Major</div>
+        <div class="prop-text">Economic inequality drives individuals toward <strong>majors with higher earning potential</strong>, even at the expense of personal interest — reflecting a shift from intrinsic to extrinsic motivation driven by a widening perceived income gap across fields.</div>
+      </div>
+    </div>
+
+    <!-- MECHANISM -->
+    <div class="mechanism-wrap">
+      <div class="mechanism-title">Underlying Mechanism</div>
+      <div class="mechanism-flow">
+        <div class="mech-box dark">
+          <div class="mech-label">High Economic<br>Inequality</div>
+          <div class="mech-sub">Gini index ↑</div>
+        </div>
+        <div class="mech-arrow">
+          <div class="mech-arrow-inner">
+            <div style="display:flex;align-items:center;"><div class="mech-line"></div><div class="mech-tip"></div></div>
+            <div class="mech-arrow-label">amplifies</div>
+          </div>
+        </div>
+        <div class="mech-box">
+          <div class="mech-label">Perceived<br>Education Premium ↑</div>
+          <div class="mech-sub">Wider income gap in mind</div>
+        </div>
+        <div class="mech-arrow">
+          <div class="mech-arrow-inner">
+            <div style="display:flex;align-items:center;"><div class="mech-line"></div><div class="mech-tip"></div></div>
+            <div class="mech-arrow-label">drives</div>
+          </div>
+        </div>
+        <div class="mech-box">
+          <div class="mech-label">College Attendance ↑<br>Higher-Earning Majors ↑</div>
+          <div class="mech-sub">Extrinsic motivation</div>
+        </div>
+        <div class="mech-arrow">
+          <div class="mech-arrow-inner">
+            <div style="display:flex;align-items:center;"><div class="mech-line"></div><div class="mech-tip"></div></div>
+            <div class="mech-arrow-label">at cost of</div>
+          </div>
+        </div>
+        <div class="mech-box dark">
+          <div class="mech-label">Personal Interest<br>Alignment ↓</div>
+          <div class="mech-sub">Intrinsic motivation lost</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDIES -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Methodology</div>
+    <div class="block-title">Four Studies</div>
+    <div class="block-divider"></div>
+    <div class="studies-grid">
+
+      <div class="study-card">
+        <div class="study-header"><div class="study-num">01</div><div class="study-tag">Google Trends</div></div>
+        <div class="study-title">State-Level Search Interest</div>
+        <div class="study-rows">
+          <div class="study-row"><div class="study-label">Data</div><div class="study-val">State-level Google Trends for college-related terms (2015–2019, 50 US states + DC)</div></div>
+          <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Correlation & regression</div></div>
+        </div>
+        <div class="study-insight">For every 0.05-point increase in a state's Gini index, collective search interest in college education rises by <strong>approximately 17.82 points</strong> (scale: 0–100).</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-header"><div class="study-num">02</div><div class="study-tag">Census Panel Data</div></div>
+        <div class="study-title">County-Level Enrollment</div>
+        <div class="study-rows">
+          <div class="study-row"><div class="study-label">Data</div><div class="study-val">ACS enrollment data, ages 18–24, 2010–2019 (831 counties / 3,141 counties)</div></div>
+          <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Fixed-effects GLM with logit link & binomial family; sensitivity analyses</div></div>
+        </div>
+        <div class="study-insight">As county-level Gini rises, <strong>a greater proportion of 18–24 year-olds enroll</strong> in college or graduate school. Robust to unobserved confounding.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-header"><div class="study-num">03</div><div class="study-tag">Decision Game Experiment</div></div>
+        <div class="study-title">College Attendance Decision</div>
+        <div class="study-rows">
+          <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Amazon Mechanical Turk respondents</div></div>
+          <div class="study-row"><div class="study-label">Design</div><div class="study-val">One-way between-subject experiment with manipulated economic inequality</div></div>
+          <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">t-test, Chi-square, mediation analysis</div></div>
+        </div>
+        <div class="study-insight">A significantly greater proportion (<strong>+20.5 percentage points</strong>) of individuals chose to attend college when societal inequality is high vs. low. Perceived education premium confirmed as the mechanism.</div>
+      </div>
+
+      <div class="study-card">
+        <div class="study-header"><div class="study-num">04</div><div class="study-tag">Tradeoff Experiment</div></div>
+        <div class="study-title">Major Choice Tradeoff</div>
+        <div class="study-rows">
+          <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Cloud Research respondents</div></div>
+          <div class="study-row"><div class="study-label">Design</div><div class="study-val">2×3 mixed design — manipulated inequality × counterbalanced major tradeoff pairs</div></div>
+          <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">t-test, mixed ANOVA, mediation analysis</div></div>
+        </div>
+        <div class="study-insight">Individuals are <strong>significantly more likely</strong> to choose higher-earning majors over personally meaningful ones when inequality is high. Perceived education premium confirmed as the mechanism.</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Conclusion</div>
+    <div class="block-title">What This Means</div>
+    <div class="block-divider"></div>
+    <div class="conclusion-box">
+      <p>Rising economic inequality motivates individuals to pursue higher education and to prioritize earning potential over personal interests when choosing a major. <strong>These findings carry important policy implications for several pressing challenges in higher education.</strong></p>
+    </div>
+  </div>
+
+  <!-- POLICY IMPLICATIONS -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Policy Implications</div>
+    <div class="block-title">Two Pressing Higher Education Crises</div>
+    <div class="block-divider"></div>
+    <div class="impl-list">
+
+      <!-- IMPLICATION 1: Student Debt -->
+      <div class="impl-card">
+        <div class="impl-visual">
+          <svg viewBox="0 0 260 130" xmlns="http://www.w3.org/2000/svg">
+            <!-- Inequality bar -->
+            <text x="20" y="20" font-family="DM Sans" font-size="8" fill="#718096" font-weight="600" letter-spacing="0.8">INEQUALITY ↑</text>
+            <rect x="20" y="26" width="60" height="12" rx="4" fill="rgba(201,168,76,0.2)" stroke="#c9a84c" stroke-width="1"/>
+            <rect x="20" y="26" width="60" height="12" rx="4" fill="url(#gini-grad)"/>
+            <defs><linearGradient id="gini-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="rgba(201,168,76,0.1)"/><stop offset="100%" stop-color="#c9a84c"/></linearGradient></defs>
+            <text x="88" y="36" font-family="DM Sans" font-size="9" fill="#c9a84c" font-weight="700">Gini ↑</text>
+            <!-- Arrow down to debt -->
+            <line x1="50" y1="38" x2="50" y2="54" stroke="#c9a84c" stroke-width="1.5" stroke-dasharray="3,2"/>
+            <polygon points="46,54 50,62 54,54" fill="#c9a84c"/>
+            <!-- Perceived premium -->
+            <text x="20" y="76" font-family="DM Sans" font-size="8" fill="#718096" font-weight="600" letter-spacing="0.8">PERCEIVED PREMIUM ↑</text>
+            <rect x="20" y="82" width="220" height="14" rx="4" fill="rgba(192,57,43,0.12)" stroke="#c0392b" stroke-width="1"/>
+            <text x="130" y="93" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#c0392b" font-weight="600">Overestimated return on college degree</text>
+            <!-- Arrow to debt -->
+            <line x1="130" y1="96" x2="130" y2="108" stroke="#c0392b" stroke-width="1.5" stroke-dasharray="3,2"/>
+            <polygon points="126,108 130,116 134,108" fill="#c0392b"/>
+            <!-- Debt box -->
+            <rect x="60" y="116" width="140" height="14" rx="4" fill="rgba(192,57,43,0.18)" stroke="#c0392b" stroke-width="1.2"/>
+            <text x="130" y="126" text-anchor="middle" font-family="DM Sans" font-size="9" fill="#c0392b" font-weight="700">Unmanageable Student Debt</text>
+          </svg>
+        </div>
+        <div class="impl-content">
+          <div class="impl-title">The Student Debt Crisis</div>
+          <div class="impl-text">Inequality can pressure young people into college without adequately weighing their finances — while simultaneously <strong>inflating the perceived education premium</strong>, fostering undue optimism about repaying debt.<br><br><strong>NUDGE: <strong>Help students consider career paths and financial capabilities beyond the inflated premium.</strong></div>
+        </div>
+      </div>
+
+      <!-- IMPLICATION 2: Humanity Crisis -->
+      <div class="impl-card">
+        <div class="impl-visual">
+          <svg viewBox="0 0 300 150" xmlns="http://www.w3.org/2000/svg">
+            <text x="10" y="18" font-family="DM Sans" font-size="7.5" fill="#718096" font-weight="600" letter-spacing="0.6">DEGREES CONFERRED</text>
+            <rect x="20" y="42" width="28" height="65" rx="3" fill="rgba(44,90,155,0.7)"/>
+            <text x="34" y="118" text-anchor="middle" font-family="DM Sans" font-size="7" fill="#718096">1970s</text>
+            <text x="34" y="38" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#2c5a9b" font-weight="600">~15%</text>
+            <rect x="60" y="87" width="28" height="20" rx="3" fill="rgba(192,57,43,0.7)"/>
+            <text x="74" y="118" text-anchor="middle" font-family="DM Sans" font-size="7" fill="#718096">2010s</text>
+            <text x="74" y="83" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#c0392b" font-weight="600">&lt;5%</text>
+            <line x1="48" y1="75" x2="60" y2="90" stroke="#c0392b" stroke-width="1.2" stroke-dasharray="3,2"/>
+            <line x1="108" y1="10" x2="108" y2="125" stroke="rgba(201,168,76,0.25)" stroke-width="1"/>
+            <text x="118" y="18" font-family="DM Sans" font-size="7.5" fill="#718096" font-weight="600" letter-spacing="0.6">MAJOR REGRET</text>
+            <text x="118" y="46" font-family="DM Sans" font-size="8" fill="#4a5568">Humanities</text>
+            <rect x="118" y="50" width="140" height="13" rx="4" fill="rgba(192,57,43,0.75)"/>
+            <text x="264" y="61" font-family="DM Sans" font-size="8.5" fill="#c0392b" font-weight="700">50%</text>
+            <text x="118" y="78" font-family="DM Sans" font-size="8" fill="#4a5568">Engineering</text>
+            <rect x="118" y="82" width="70" height="13" rx="4" fill="rgba(44,90,155,0.6)"/>
+            <text x="194" y="93" font-family="DM Sans" font-size="8.5" fill="#2c5a9b" font-weight="700">25%</text>
+            <text x="118" y="120" font-family="DM Sans" font-size="7" fill="#718096" font-style="italic">% graduates regretting their major</text>
+          </svg>
+        </div>
+        <div class="impl-content">
+          <div class="impl-title">The Humanities Crisis</div>
+          <div class="impl-text">Humanities degrees fell to less than <strong>one-third of their 1970s share</strong>, and nearly <strong>50% of humanities graduates</strong> regret their major (vs. 25% of engineering graduates).<br><br><strong>REFRAME:</strong> <strong>Emphasize the earning power of transferable skills — critical thinking, communication, adaptability — and foster environments where students build on authentic strengths.</strong></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- PROJECT NAV -->
+<div class="project-nav">
+  <a href="project-1.html" class="proj-nav-link">
+    <div class="proj-nav-label">← Previous</div>
+    <div class="proj-nav-title">Unequal Access to P2P Services</div>
+  </a>
+  <a href="project-3.html" class="proj-nav-link" style="text-align:right;">
+    <div class="proj-nav-label">Next Project →</div>
+    <div class="proj-nav-title">What Do People Think About When They Talk About Inequality?</div>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-name">Jinyan Xiang, Ph.D.</div>
+  <div class="footer-copy">© 2025 · All rights reserved</div>
+</footer>
+
+<script>
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold:0.08 });
+  reveals.forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

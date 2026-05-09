@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perception of Inequality — Jinyan Xiang, Ph.D.</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;0,700;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.8.5/d3.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/topojson/3.0.2/topojson.min.js"></script>
+<style>
+  :root {
+    --cream: #faf6ef; --warm-white: #fffdf9;
+    --gold: #c9a84c; --gold-light: #e8d5a3; --gold-pale: #f5edd8; --gold-dim: #a8863a;
+    --slate: #2e3642; --slate-mid: #4a5568; --slate-light: #718096;
+    --accent: #8b5e3c; --blue-dark: #2c5a9b; --blue-light: #8db5c8; --red: #c0392b;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html { scroll-behavior:smooth; }
+  body { background:var(--cream); font-family:'DM Sans',sans-serif; color:var(--slate); }
+
+  nav {
+    position:fixed; top:0; left:0; right:0; z-index:100;
+    display:flex; justify-content:space-between; align-items:center;
+    padding:20px 60px; background:rgba(250,246,239,0.92); backdrop-filter:blur(12px);
+    border-bottom:1px solid rgba(201,168,76,0.2);
+  }
+  .nav-name { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:600; color:var(--slate); text-decoration:none; }
+  .nav-name span { color:var(--gold); }
+  .nav-links { display:flex; gap:28px; list-style:none; align-items:center; }
+  .nav-links a { font-size:12px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-mid); text-decoration:none; transition:color 0.2s; }
+  .nav-links a:hover { color:var(--gold); }
+
+  .project-hero { padding:130px 60px 60px; border-bottom:1px solid var(--gold-light); position:relative; overflow:hidden; }
+  .project-hero::after { content:'03'; position:absolute; right:40px; top:50%; transform:translateY(-50%); font-family:'Cormorant Garamond',serif; font-size:260px; font-weight:700; color:rgba(201,168,76,0.06); line-height:1; pointer-events:none; }
+  .hero-meta { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:18px; }
+  .meta-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:var(--gold-pale); color:var(--accent); border:1px solid var(--gold-light); }
+  .award-pill { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; padding:4px 12px; border-radius:20px; background:linear-gradient(135deg,#fdf3dc,#f5e4b0); color:var(--accent); border:1px solid var(--gold); }
+  .project-title { font-family:'Cormorant Garamond',serif; font-size:clamp(36px,4vw,58px); font-weight:700; line-height:1.15; color:var(--slate); max-width:700px; margin-bottom:20px; }
+  .project-subtitle { font-size:15px; color:var(--slate-mid); font-weight:300; line-height:1.75; max-width:620px; margin-bottom:28px; }
+  .hero-stats { display:flex; gap:36px; flex-wrap:wrap; margin-bottom:28px; }
+  .stat { border-left:2px solid var(--gold); padding-left:14px; }
+  .stat-val { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:var(--slate); line-height:1; }
+  .stat-label { font-size:10px; font-weight:500; letter-spacing:0.1em; text-transform:uppercase; color:var(--slate-light); margin-top:3px; }
+  .read-paper-btn { display:inline-flex; align-items:center; gap:8px; padding:11px 24px; border:1.5px solid var(--gold); color:var(--gold-dim); border-radius:4px; font-size:12px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; text-decoration:none; transition:all 0.2s; }
+  .read-paper-btn:hover { background:var(--gold); color:var(--warm-white); }
+
+  .content { max-width:1060px; margin:0 auto; padding:64px 60px; }
+  .section-block { margin-bottom:60px; }
+  .block-eyebrow { font-size:9.5px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:8px; }
+  .block-title { font-family:'Cormorant Garamond',serif; font-size:28px; font-weight:700; color:var(--slate); margin-bottom:14px; line-height:1.25; }
+  .block-divider { width:48px; height:2px; background:linear-gradient(90deg,var(--gold),transparent); margin-bottom:20px; }
+  .block-text { font-size:14px; color:var(--slate-mid); line-height:1.85; font-weight:300; max-width:100%; }
+  .block-text p { margin-bottom:12px; }
+  .block-text strong { color:var(--slate); font-weight:600; }
+  .block-text em { font-style:italic; color:var(--accent); }
+
+  /* TL;DR */
+  .tldr { background:var(--slate); border-radius:12px; padding:28px 32px; margin-bottom:60px; display:flex; gap:24px; align-items:flex-start; box-shadow:0 4px 24px rgba(46,54,66,0.2); }
+  .tldr-label { font-size:10px; font-weight:600; letter-spacing:0.18em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; }
+  .tldr-text { font-size:14.5px; color:var(--gold-pale); line-height:1.75; font-weight:300; }
+  .tldr-text strong { color:#fff; font-weight:600; }
+  .tldr-icon { font-family:'Cormorant Garamond',serif; font-size:48px; font-weight:700; color:rgba(201,168,76,0.3); line-height:1; flex-shrink:0; }
+
+  /* PULL QUOTE */
+  .pull-quote { border-left:3px solid var(--gold); padding:16px 20px; margin:20px 0; background:var(--warm-white); border-radius:0 8px 8px 0; }
+  .pull-quote p { font-family:'Cormorant Garamond',serif; font-size:18px; font-style:italic; color:var(--slate-mid); line-height:1.65; }
+  .pull-quote cite { font-size:11px; color:var(--slate-light); margin-top:8px; display:block; font-style:normal; }
+
+  /* STUDIES */
+  .studies-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:20px; }
+  .study-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; padding:20px; box-shadow:0 2px 10px rgba(201,168,76,0.07); }
+  .study-header { display:flex; align-items:baseline; gap:10px; margin-bottom:10px; }
+  .study-num { font-family:'Cormorant Garamond',serif; font-size:26px; font-weight:700; color:rgba(201,168,76,0.2); line-height:1; }
+  .study-tag { font-size:9px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); }
+  .study-title { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:700; color:var(--slate); margin-bottom:10px; }
+  .study-rows { display:flex; flex-direction:column; gap:5px; margin-bottom:10px; }
+  .study-row { display:flex; gap:8px; }
+  .study-label { font-size:9px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--gold); width:62px; flex-shrink:0; padding-top:2px; }
+  .study-val { font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .study-insight { padding:9px 12px; background:var(--gold-pale); border-radius:6px; border-left:3px solid var(--gold); font-size:12px; color:var(--slate-mid); line-height:1.55; font-weight:300; }
+  .study-insight strong { color:var(--slate); font-weight:600; }
+
+  /* EMBEDDED CHART */
+  .chart-embed { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:12px; overflow:hidden; box-shadow:0 2px 16px rgba(201,168,76,0.1); margin-top:24px; }
+  .chart-embed iframe { width:100%; border:none; display:block; }
+  .chart-caption { padding:10px 18px; font-size:11px; color:var(--slate-light); font-style:italic; border-top:1px solid var(--gold-pale); background:var(--warm-white); }
+
+  /* WORLD MAP */
+  .map-wrap { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:12px; overflow:hidden; padding:24px; box-shadow:0 2px 16px rgba(201,168,76,0.1); margin-top:20px; }
+  .map-title { font-size:10px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:16px; }
+  #world-map-svg { width:100%; height:auto; display:block; }
+  .map-legend { display:flex; gap:12px; flex-wrap:wrap; margin-top:14px; align-items:center; }
+  .map-legend-label { font-size:9.5px; font-weight:600; letter-spacing:0.08em; text-transform:uppercase; color:var(--slate-mid); margin-right:4px; }
+  .leg-item { display:flex; align-items:center; gap:5px; font-size:10px; color:var(--slate-mid); }
+  .leg-swatch { width:12px; height:12px; border-radius:2px; border:1px solid rgba(0,0,0,0.08); }
+
+  /* POLICY IMPLICATIONS */
+  .impl-list { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-top:20px; }
+  .impl-card { background:var(--warm-white); border:1.5px solid var(--gold-light); border-radius:10px; overflow:hidden; box-shadow:0 2px 10px rgba(201,168,76,0.07); }
+  .impl-visual { background:var(--cream); border-bottom:1px solid var(--gold-light); padding:16px; display:flex; align-items:center; justify-content:center; }
+  .impl-visual svg { width:100%; height:auto; display:block; }
+  .impl-content { padding:18px 20px; }
+  .impl-title { font-size:10px; font-weight:600; letter-spacing:0.1em; text-transform:uppercase; color:var(--gold-dim); margin-bottom:6px; }
+  .impl-text { font-size:12.5px; color:var(--slate-mid); line-height:1.6; font-weight:300; }
+  .impl-text strong { color:var(--slate); font-weight:600; }
+
+  /* CONCLUSION */
+  .conclusion-box { background:var(--gold-pale); border:1.5px solid var(--gold-light); border-radius:10px; padding:22px 28px; border-left:4px solid var(--gold); }
+  .conclusion-box p { font-size:14px; color:var(--slate-mid); line-height:1.75; font-weight:300; }
+  .conclusion-box strong { color:var(--slate); font-weight:600; }
+
+  /* IAT D-SCORE VISUAL */
+  .dscore-wrap { background:#f0ece4; border:1.5px solid #c9a84c; border-radius:12px; padding:24px 28px; margin-top:20px; box-shadow:0 2px 12px rgba(201,168,76,0.1); }
+  .dscore-eyebrow { font-size:9.5px; font-weight:600; letter-spacing:0.14em; text-transform:uppercase; color:var(--gold); margin-bottom:12px; }
+  .dscore-row { display:flex; align-items:center; gap:20px; }
+  .dscore-val { font-family:'Cormorant Garamond',serif; font-size:52px; font-weight:700; color:var(--blue-dark); line-height:1; flex-shrink:0; }
+  .dscore-desc { font-size:13px; color:var(--slate-mid); line-height:1.65; font-weight:300; }
+  .dscore-desc strong { color:var(--slate); font-weight:600; }
+  .dscore-scale { margin-top:14px; }
+  .scale-bar { height:8px; border-radius:4px; background:linear-gradient(90deg,#c0392b 0%,#e8d5a3 50%,#2c5a9b 100%); position:relative; }
+  .scale-marker { position:absolute; top:-5px; width:18px; height:18px; background:#fff; border:3px solid var(--gold); border-radius:50%; transform:translateX(-50%); left:72%; }
+  .scale-labels { display:flex; justify-content:space-between; font-size:9px; color:var(--slate-light); margin-top:5px; }
+
+  /* SUBGROUP BARS */
+  .subgroup-wrap { margin-top:16px; display:flex; flex-direction:column; gap:8px; }
+  .bar-row { display:flex; align-items:center; gap:10px; }
+  .bar-name { font-size:11px; color:var(--slate-mid); width:110px; flex-shrink:0; text-align:right; }
+  .bar-track { flex:1; height:12px; background:rgba(44,90,155,0.1); border-radius:6px; overflow:hidden; }
+  .bar-fill { height:100%; border-radius:6px; background:linear-gradient(90deg,rgba(44,90,155,0.5),#2c5a9b); transition:width 1.2s cubic-bezier(0.16,1,0.3,1); }
+  .bar-val { font-size:10px; font-weight:600; color:var(--blue-dark); width:36px; flex-shrink:0; }
+
+  .project-nav { border-top:1px solid var(--gold-light); padding:36px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .proj-nav-link { display:flex; flex-direction:column; gap:4px; text-decoration:none; }
+  .proj-nav-label { font-size:9.5px; font-weight:600; letter-spacing:0.12em; text-transform:uppercase; color:var(--slate-light); }
+  .proj-nav-title { font-family:'Cormorant Garamond',serif; font-size:18px; font-weight:700; color:var(--slate); transition:color 0.2s; }
+  .proj-nav-link:hover .proj-nav-title { color:var(--gold); }
+
+  footer { background:var(--slate); padding:24px 60px; display:flex; justify-content:space-between; align-items:center; }
+  .footer-name { font-family:'Cormorant Garamond',serif; font-size:16px; font-weight:600; color:var(--gold-light); }
+  .footer-copy { font-size:11px; color:var(--slate-light); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);} }
+  .fade-in { animation:fadeUp 0.7s ease both; }
+  .fade-in-2 { animation:fadeUp 0.7s ease 0.15s both; }
+  .fade-in-3 { animation:fadeUp 0.7s ease 0.3s both; }
+  .reveal { opacity:0; transform:translateY(24px); transition:opacity 0.7s ease,transform 0.7s ease; }
+  .reveal.visible { opacity:1; transform:translateY(0); }
+</style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-name">Jinyan <span>Xiang</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#research">Academia</a></li>
+    <li><a href="index.html#industry">Industry</a></li>
+    <li><a href="index.html#about">About</a></li>
+    <li><a href="index.html#contact">Contact</a></li>
+    <li><a href="index.html" style="color:var(--gold);">← Portfolio</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<div class="project-hero">
+  <div class="hero-meta fade-in">
+    <span class="meta-pill">Lay Understanding</span>
+    <span class="meta-pill">Bias</span>
+    <span class="meta-pill">Inequality Perception</span>
+    <span class="award-pill">🎤 Presented at SCP Annual Conference</span>
+  </div>
+  <h1 class="project-title fade-in-2">What Do People Think About<br>When They Talk About Inequality?</h1>
+  <p class="project-subtitle fade-in-2">Explores whether people associate inequality more with poverty or affluence — and why this perception explains a paradox in public attitudes toward redistribution.</p>
+  <div class="hero-stats fade-in-3">
+    <div class="stat"><div class="stat-val">2</div><div class="stat-label">Studies</div></div>
+    <div class="stat"><div class="stat-val">+0.40</div><div class="stat-label">IAT D-Score</div></div>
+    <div class="stat"><div class="stat-val">6</div><div class="stat-label">Demographic Subgroups</div></div>
+  </div>
+  <a href="https://www.dropbox.com/scl/fi/tvz55q1z5o8yzjvtj6p7d/The-Lay-Understanding-of-Income-Inequality.pdf?rlkey=lan177cu9zo4pqg46tqkea0mm&st=twwu9sai&dl=0" target="_blank" class="read-paper-btn fade-in-3">Read Full Paper →</a>
+</div>
+
+<div class="content">
+
+  <!-- TL;DR -->
+  <div class="tldr reveal">
+    <div class="tldr-icon">✦</div>
+    <div>
+      <div class="tldr-label">TL;DR</div>
+      <div class="tldr-text">
+        People instinctively associate economic inequality with <strong>poverty rather than affluence</strong> — yet in reality, rising inequality is driven more by growth at the top. This <strong>perception-reality gap</strong> helps explain why many who see inequality as unjust still oppose redistribution from the rich.
+      </div>
+    </div>
+  </div>
+
+  <!-- BACKGROUND -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Background</div>
+    <div class="block-title">The Defining Challenge of Our Time</div>
+    <div class="block-divider"></div>
+
+    <!-- TWO COLUMN: map LEFT, quote+text RIGHT -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:36px;align-items:start;">
+      <!-- LEFT: World Map -->
+      <div class="map-wrap">
+        <div class="map-title">Global Gini Index · World Bank, 1992–2020</div>
+        <svg id="world-map-svg" viewBox="0 0 960 460" style="width:100%;height:auto;"></svg>
+        <div class="map-legend">
+          <span class="map-legend-label">Gini</span>
+          <div class="leg-item"><div class="leg-swatch" style="background:#1a0a0a;"></div>&gt;50%</div>
+          <div class="leg-item"><div class="leg-swatch" style="background:#6b1212;"></div>45–50%</div>
+          <div class="leg-item"><div class="leg-swatch" style="background:#c0392b;"></div>40–45%</div>
+          <div class="leg-item"><div class="leg-swatch" style="background:#e07b39;"></div>35–40%</div>
+          <div class="leg-item"><div class="leg-swatch" style="background:#f0b97a;"></div>30–35%</div>
+          <div class="leg-item"><div class="leg-swatch" style="background:#fae0c0;"></div>&lt;30%</div>
+          <div class="leg-item"><div class="leg-swatch" style="background:#c8cdd4;"></div>No data</div>
+        </div>
+      </div>
+      <!-- RIGHT: Quote + Text -->
+      <div style="padding-top:8px;">
+        <div class="pull-quote" style="margin-bottom:20px;">
+          <p>"Income inequality is the defining challenge of our time."</p>
+          <cite>— Barack Obama</cite>
+        </div>
+        <div class="block-text">
+          <p>While prior research extensively examines how people perceive the <em>level</em> of inequality, <strong>little is known about what inequality means to them.</strong> Do they associate rising economic inequality more with an increase in poverty — or in affluence?</p>
+          <p>As an exploratory study, we examine this question across both explicit (survey) and implicit (IAT) measures, across diverse demographic groups.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- STUDIES -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Methodology &amp; Results</div>
+    <div class="block-title">Two Studies</div>
+    <div class="block-divider"></div>
+
+    <!-- STUDY 1: Card - light theme -->
+    <div class="study-card" style="margin-bottom:16px; background:var(--warm-white);">
+      <div class="study-header"><div class="study-num">01</div><div class="study-tag">Multi-level Experiment · Survey</div></div>
+      <div class="study-title">Explicit Associations</div>
+      <div class="study-rows">
+        <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Nationally representative sample via Qualtrics — proportional quota sampling stratified by gender, ethnicity, religion, and political ideology</div></div>
+        <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">Mixed-effects OLS regression with 3 fixed effects (Gini index, income group, Gini × Group) + random intercept for individual baseline perception</div></div>
+      </div>
+    </div>
+
+    <!-- STUDY 1: Results Chart -->
+    <div style="background:var(--warm-white);border:1.5px solid var(--gold-light);border-radius:12px;padding:18px 20px;box-shadow:0 2px 12px rgba(201,168,76,0.08);margin-bottom:36px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:10px;">Study 1 · Results</div>
+      <div style="background:var(--gold-pale);border-left:3px solid var(--gold);border-radius:0 6px 6px 0;padding:10px 14px;margin-bottom:14px;font-size:12.5px;color:var(--slate-mid);line-height:1.6;">
+        <strong>People associate rising inequality significantly more with an increase in poverty</strong> than with affluence — regardless of whether inequality varies across countries or over time.
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:700;color:var(--slate);text-align:center;margin-bottom:3px;">Over Time</div>
+          <div style="text-align:center;font-size:9.5px;color:var(--slate-light);font-style:italic;margin-bottom:8px;">Gini varies across 6 years</div>
+          <canvas id="c1" width="800" height="520" style="width:100%;height:auto;display:block;"></canvas>
+          <div style="text-align:center;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--slate-mid);margin-top:5px;">Gini Index</div>
+        </div>
+        <div>
+          <div style="font-family:'Cormorant Garamond',serif;font-size:13px;font-weight:700;color:var(--slate);text-align:center;margin-bottom:3px;">Cross Countries</div>
+          <div style="text-align:center;font-size:9.5px;color:var(--slate-light);font-style:italic;margin-bottom:8px;">Gini varies across 6 countries</div>
+          <canvas id="c2" width="800" height="520" style="width:100%;height:auto;display:block;"></canvas>
+          <div style="text-align:center;font-size:9px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--slate-mid);margin-top:5px;">Gini Index</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:20px;justify-content:center;margin-top:12px;padding-top:10px;border-top:1px solid var(--gold-pale);align-items:center;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--slate-mid);">
+          <div style="width:18px;height:2.5px;background:#2c5a9b;border-radius:2px;"></div>
+          Perceived % in Poverty
+        </div>
+        <div style="display:flex;align-items:center;gap:7px;font-size:11px;color:var(--slate-mid);">
+          <div style="width:18px;height:2.5px;background:#8db5c8;border-radius:2px;"></div>
+          Perceived % in Affluence
+        </div>
+        <div style="font-size:10px;color:var(--slate-light);font-style:italic;">Error bars = 95% CI</div>
+      </div>
+    </div>
+
+    <!-- STUDY 2: Card - darker theme -->
+    <div class="study-card" style="margin-bottom:16px; background:#f0ece4; border-color:#c9a84c;">
+      <div class="study-header"><div class="study-num" style="color:rgba(139,94,60,0.25);">02</div><div class="study-tag">Implicit Association Test (IAT)</div></div>
+      <div class="study-title">Implicit Associations</div>
+      <div class="study-rows">
+        <div class="study-row"><div class="study-label">Sample</div><div class="study-val">Amazon Mechanical Turk respondents</div></div>
+        <div class="study-row"><div class="study-label">Measure</div><div class="study-val">D-score — standardized difference in reaction time when inequality is paired with poverty vs. affluence</div></div>
+        <div class="study-row"><div class="study-label">Analysis</div><div class="study-val">One-sample t-test against zero to assess implicit association; robustness confirmed across demographic subgroups (gender, race, SES, political ideology)</div></div>
+      </div>
+    </div>
+
+    <!-- STUDY 2: How IAT Works - darker theme -->
+    <div style="background:#f0ece4;border:1.5px solid #c9a84c;border-radius:12px;padding:22px 26px;box-shadow:0 2px 12px rgba(201,168,76,0.08);margin-bottom:16px;">
+      <div style="font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--gold);margin-bottom:6px;">How the IAT Works</div>
+      <div style="font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:700;color:var(--slate);margin-bottom:16px;">Measuring Implicit Associations Between Inequality &amp; Income Groups</div>
+      <div style="background:rgba(44,90,155,0.07);border:1.5px solid rgba(44,90,155,0.2);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:14px;margin-bottom:10px;flex-wrap:wrap;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#2c5a9b;width:90px;flex-shrink:0;line-height:1.3;">Block A<br>Congruent</div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">
+          <span style="background:#2e3642;color:#e8d5a3;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;">Inequality</span>
+          <span style="background:#eaf0fb;color:#2c5a9b;border:1px solid rgba(44,90,155,0.3);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;">Poverty</span>
+          <span style="font-size:11px;color:var(--slate-light);">paired together</span>
+        </div>
+        <div style="font-size:11px;font-style:italic;color:#2c5a9b;white-space:nowrap;">↑ Faster responses</div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--slate-light);font-style:italic;margin:6px 0;">↕ &nbsp;reaction time difference = strength of implicit association</div>
+      <div style="background:rgba(192,57,43,0.07);border:1.5px solid rgba(192,57,43,0.2);border-radius:8px;padding:12px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap;">
+        <div style="font-size:10px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#c0392b;width:90px;flex-shrink:0;line-height:1.3;">Block B<br>Incongruent</div>
+        <div style="display:flex;align-items:center;gap:8px;flex:1;flex-wrap:wrap;">
+          <span style="background:#2e3642;color:#e8d5a3;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;white-space:nowrap;">Inequality</span>
+          <span style="background:#fdf0ee;color:#c0392b;border:1px solid rgba(192,57,43,0.25);padding:4px 12px;border-radius:20px;font-size:12px;font-weight:500;white-space:nowrap;">Affluence</span>
+          <span style="font-size:11px;color:var(--slate-light);">paired together</span>
+        </div>
+        <div style="font-size:11px;font-style:italic;color:#c0392b;white-space:nowrap;">↓ Slower responses</div>
+      </div>
+      <p style="font-size:12.5px;color:var(--slate-mid);line-height:1.65;font-weight:300;margin-top:14px;padding-top:12px;border-top:1px solid var(--gold-pale);">Participants categorize words faster when <strong>concepts feel naturally linked</strong>. Faster sorting in Block A signals a stronger implicit association between <em>inequality</em> and <em>poverty</em>.</p>
+    </div>
+
+    <!-- STUDY 2: IAT D-Score Results -->
+    <div class="dscore-wrap">
+      <div class="dscore-eyebrow">Study 2 · Results — D-Score by Demographic Subgroup</div>
+      <div class="dscore-row">
+        <div class="dscore-val">+0.40</div>
+        <div class="dscore-desc">A <strong>positive D-score</strong> indicates faster responses when inequality is paired with poverty — revealing a stronger implicit association. <strong>People implicitly associate inequality significantly more with poverty than affluence — consistent across gender, race, SES, and political ideology.</strong></div>
+      </div>
+      <div class="dscore-scale">
+        <div class="scale-bar"><div class="scale-marker"></div></div>
+        <div class="scale-labels"><span>← Inequality = Affluence</span><span>Inequality = Poverty →</span></div>
+      </div>
+      <div class="subgroup-wrap" id="subgroup-bars"></div>
+    </div>
+  </div>
+
+  <!-- CONCLUSION -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Conclusion</div>
+    <div class="block-title">What This Means</div>
+    <div class="block-divider"></div>
+    <div class="conclusion-box">
+      <p>People associate income inequality more with poverty than affluence — and this lay understanding extends beyond income inequality to the abstract notion of inequality itself. <strong>These findings provide important implications for policy making.</strong></p>
+    </div>
+  </div>
+
+  <!-- POLICY IMPLICATIONS -->
+  <div class="section-block reveal">
+    <div class="block-eyebrow">Policy Implications</div>
+    <div class="block-title">Two Insights for Policymakers</div>
+    <div class="block-divider"></div>
+    <div class="impl-list">
+
+      <!-- IMPLICATION 1: Misperception -->
+      <div class="impl-card">
+        <div class="impl-visual">
+          <svg viewBox="0 0 280 150" xmlns="http://www.w3.org/2000/svg">
+            <!-- PERCEPTION -->
+            <text x="10" y="16" font-family="DM Sans" font-size="8" fill="#718096" font-weight="700" letter-spacing="0.5">PERCEPTION</text>
+            <text x="10" y="28" font-family="DM Sans" font-size="7.5" fill="#718096">What People Think ↑ inequality means:</text>
+            <rect x="10" y="34" width="110" height="14" rx="4" fill="rgba(192,57,43,0.75)"/>
+            <text x="65" y="45" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#fff" font-weight="700">Poverty ↑↑ (large)</text>
+            <rect x="10" y="52" width="48" height="14" rx="4" fill="rgba(44,90,155,0.4)"/>
+            <text x="34" y="63" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#fff">Affluence ↑</text>
+            <!-- REALITY -->
+            <text x="10" y="86" font-family="DM Sans" font-size="8" fill="#718096" font-weight="700" letter-spacing="0.5">REALITY</text>
+            <text x="10" y="98" font-family="DM Sans" font-size="7.5" fill="#718096">What actually drives ↑ inequality:</text>
+            <rect x="10" y="104" width="110" height="14" rx="4" fill="rgba(44,90,155,0.75)"/>
+            <text x="65" y="115" text-anchor="middle" font-family="DM Sans" font-size="8" fill="#fff" font-weight="700">Affluence ↑↑ (large)</text>
+            <rect x="10" y="122" width="48" height="14" rx="4" fill="rgba(192,57,43,0.4)"/>
+            <text x="34" y="133" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#fff">Poverty ↑</text>
+            <!-- Gap box -->
+            <rect x="148" y="50" width="122" height="52" rx="6" fill="rgba(201,168,76,0.12)" stroke="#c9a84c" stroke-width="1.2"/>
+            <text x="209" y="68" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="#c9a84c" font-weight="700">Perception–Reality Gap</text>
+            <text x="209" y="82" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#a8863a">A new form of misperception</text>
+            <text x="209" y="94" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#a8863a">of inequality</text>
+          </svg>
+        </div>
+        <div class="impl-content">
+          <div class="impl-title">A New Form of Misperception</div>
+          <div class="impl-text">People's lay understanding of inequality — associating it more with poverty than affluence — <strong>is opposite to reality</strong>: rising inequality is driven predominantly by growth at the top of the income distribution. This perception-reality gap represents a previously overlooked form of misperception with direct policy consequences.</div>
+        </div>
+      </div>
+
+      <!-- IMPLICATION 2: Paradox -->
+      <div class="impl-card">
+        <div class="impl-visual">
+          <svg viewBox="0 0 260 130" xmlns="http://www.w3.org/2000/svg">
+            <!-- 55% believe unjust -->
+            <rect x="10" y="14" width="110" height="50" rx="7" fill="#2e3642"/>
+            <text x="65" y="32" text-anchor="middle" font-family="DM Sans" font-size="18" fill="#c9a84c" font-weight="700">55%</text>
+            <text x="65" y="46" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#e8d5a3">believe inequality is unjust</text>
+            <!-- But 62% oppose -->
+            <rect x="140" y="14" width="110" height="50" rx="7" fill="#2e3642" stroke="#c9a84c" stroke-width="1"/>
+            <text x="195" y="32" text-anchor="middle" font-family="DM Sans" font-size="18" fill="#c0392b" font-weight="700">62%</text>
+            <text x="195" y="46" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#e8d5a3">oppose redistribution</text>
+            <!-- Paradox label -->
+            <text x="130" y="80" text-anchor="middle" font-family="DM Sans" font-size="8.5" fill="#718096" font-weight="600">THE PARADOX</text>
+            <!-- Explanation -->
+            <rect x="10" y="88" width="240" height="32" rx="6" fill="rgba(201,168,76,0.1)" stroke="var(--gold-light)" stroke-width="1"/>
+            <text x="130" y="102" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#4a5568">Associating inequality with poverty → perceiving</text>
+            <text x="130" y="114" text-anchor="middle" font-family="DM Sans" font-size="7.5" fill="#4a5568">tax on the rich as less justified → prefer direct aid</text>
+          </svg>
+        </div>
+        <div class="impl-content">
+          <div class="impl-title">Explaining a Policy Paradox</div>
+          <div class="impl-text">A majority of Americans (55%) view the wealth distribution as unjust — yet over two-thirds oppose redistribution from the rich to the poor. Our findings help explain this paradox: <strong>because people mentally link inequality with poverty rather than affluence, taxing the rich feels like the wrong fix</strong> — and direct support for those at the bottom feels more intuitive.</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<!-- PROJECT NAV -->
+<div class="project-nav">
+  <a href="project-2.html" class="proj-nav-link">
+    <div class="proj-nav-label">← Previous</div>
+    <div class="proj-nav-title">How Economic Inequality Shapes Education Decisions</div>
+  </a>
+  <a href="project-4.html" class="proj-nav-link" style="text-align:right;">
+    <div class="proj-nav-label">Next Project →</div>
+    <div class="proj-nav-title">Pro-Environmental Behaviors</div>
+  </a>
+</div>
+
+<footer>
+  <div class="footer-name">Jinyan Xiang, Ph.D.</div>
+  <div class="footer-copy">© 2025 · All rights reserved</div>
+</footer>
+
+<script>
+  // Scroll reveal
+  const reveals = document.querySelectorAll('.reveal');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+  }, { threshold:0.08 });
+  reveals.forEach(el => observer.observe(el));
+
+  // ── WORLD MAP ──
+  const giniData = {
+    4:28,8:33,12:35,24:51,32:42,36:34,40:30,50:32,56:28,64:37,68:45,76:53,100:40,
+    104:38,116:38,120:46,124:34,140:56,144:40,152:52,156:38,170:52,180:42,188:49,
+    818:32,222:42,231:33,246:27,250:32,266:38,276:32,288:43,300:34,320:53,324:33,
+    332:41,340:53,348:30,356:35,360:39,364:43,368:30,372:30,376:39,380:35,388:46,
+    400:36,404:42,408:36,410:32,414:33,418:37,422:31,430:36,434:35,440:36,442:32,
+    450:43,454:46,458:41,466:33,484:48,504:40,508:54,516:59,524:33,528:30,558:46,
+    560:34,566:43,578:26,591:51,598:43,600:48,604:46,608:44,616:33,620:35,630:53,
+    642:37,643:38,646:51,678:57,682:46,686:40,694:35,703:26,706:46,710:63,724:35,
+    729:35,752:28,756:33,760:37,762:34,764:38,788:35,792:42,800:41,804:26,826:34,
+    840:41,858:43,860:37,862:44,704:36,887:37,894:55,716:50
+  };
+  function getColor(g) {
+    if(g===undefined) return '#c8cdd4';
+    if(g>50) return '#1a0a0a'; if(g>45) return '#6b1212'; if(g>40) return '#c0392b';
+    if(g>35) return '#e07b39'; if(g>30) return '#f0b97a'; return '#fae0c0';
+  }
+  const svg = d3.select('#world-map-svg');
+  const proj = d3.geoNaturalEarth1().scale(148).translate([480,230]);
+  const path = d3.geoPath().projection(proj);
+  fetch('https://cdn.jsdelivr.net/npm/world-atlas@2/countries-110m.json')
+    .then(r=>r.json()).then(world=>{
+      const countries = topojson.feature(world, world.objects.countries);
+      svg.append('rect').attr('width',960).attr('height',460).attr('fill','#e8f0f5').attr('rx',8);
+      const grat = d3.geoGraticule()();
+      svg.append('path').datum(grat).attr('d',path).attr('fill','none').attr('stroke','rgba(180,200,220,0.35)').attr('stroke-width',0.4);
+      svg.selectAll('.country').data(countries.features).enter().append('path')
+        .attr('class','country').attr('d',path)
+        .attr('fill',d=>getColor(giniData[+d.id]))
+        .attr('stroke','rgba(255,253,249,0.5)').attr('stroke-width',0.4);
+    });
+
+  // ── LINE CHARTS ──
+  const gini=[0.2,0.3,0.4,0.5,0.6,0.7];
+  const c1_poor={y:[33.0,34.0,35.0,37.5,38.5,40.2],err:[0.8,0.6,0.7,0.6,0.5,0.7]};
+  const c1_rich={y:[25.7,26.7,27.6,28.9,29.0,29.7],err:[0.8,0.6,0.6,0.6,0.5,0.6]};
+  const c2_poor={y:[30.7,32.1,33.5,35.8,37.8,38.9],err:[0.9,0.8,0.8,0.7,0.6,0.8]};
+  const c2_rich={y:[26.2,27.1,26.8,28.7,28.6,29.5],err:[0.8,0.7,0.8,0.7,0.6,0.7]};
+
+  function drawChart(id,poor,rich){
+    const canvas=document.getElementById(id);
+    const ctx=canvas.getContext('2d');
+    const W=canvas.width,H=canvas.height;
+    const pad={top:40,right:40,bottom:80,left:80};
+    const cW=W-pad.left-pad.right,cH=H-pad.top-pad.bottom;
+    const xMin=0.15,xMax=0.75,yMin=20,yMax=45;
+    const sx=v=>pad.left+(v-xMin)/(xMax-xMin)*cW;
+    const sy=v=>pad.top+(1-(v-yMin)/(yMax-yMin))*cH;
+    ctx.clearRect(0,0,W,H);
+
+    // Background
+    ctx.fillStyle='#fffdf9';
+    ctx.fillRect(0,0,W,H);
+
+    // Grid lines
+    const yTicks=[20,25,30,35,40,45];
+    ctx.setLineDash([6,8]);
+    ctx.strokeStyle='rgba(201,168,76,0.22)';
+    ctx.lineWidth=1.5;
+    yTicks.forEach(t=>{
+      ctx.beginPath();ctx.moveTo(pad.left,sy(t));ctx.lineTo(pad.left+cW,sy(t));ctx.stroke();
+    });
+    ctx.setLineDash([]);
+
+    // Axes
+    ctx.strokeStyle='rgba(100,110,130,0.2)';ctx.lineWidth=1.5;
+    ctx.beginPath();ctx.moveTo(pad.left,pad.top);ctx.lineTo(pad.left,pad.top+cH);ctx.lineTo(pad.left+cW,pad.top+cH);ctx.stroke();
+
+    // Y labels
+    ctx.fillStyle='#718096';ctx.font='bold 22px "DM Sans",sans-serif';ctx.textAlign='right';
+    yTicks.forEach(t=>ctx.fillText(t,pad.left-16,sy(t)+8));
+
+    // X labels
+    ctx.textAlign='center';ctx.font='bold 22px "DM Sans",sans-serif';
+    gini.forEach(g=>ctx.fillText(g.toFixed(1),sx(g),pad.top+cH+40));
+
+    // Y axis label
+    ctx.save();
+    ctx.translate(22,pad.top+cH/2);ctx.rotate(-Math.PI/2);
+    ctx.textAlign='center';ctx.fillStyle='#4a5568';
+    ctx.font='bold 18px "DM Sans",sans-serif';
+    ctx.fillText('Perceived Proportion (%)',0,0);
+    ctx.restore();
+
+    function drawSeries(data,color,marker){
+      // Error bars
+      data.y.forEach((y,i)=>{
+        const x=sx(gini[i]),yT=sy(y+data.err[i]),yB=sy(y-data.err[i]);
+        ctx.strokeStyle=color;ctx.lineWidth=2.5;ctx.globalAlpha=0.45;
+        ctx.beginPath();ctx.moveTo(x,yT);ctx.lineTo(x,yB);ctx.stroke();
+        ctx.beginPath();ctx.moveTo(x-7,yT);ctx.lineTo(x+7,yT);ctx.moveTo(x-7,yB);ctx.lineTo(x+7,yB);ctx.stroke();
+        ctx.globalAlpha=1;
+      });
+      // Line
+      ctx.beginPath();data.y.forEach((y,i)=>i===0?ctx.moveTo(sx(gini[i]),sy(y)):ctx.lineTo(sx(gini[i]),sy(y)));
+      ctx.strokeStyle=color;ctx.lineWidth=4;ctx.lineJoin='round';ctx.stroke();
+      // Markers
+      data.y.forEach((y,i)=>{
+        const x=sx(gini[i]),yy=sy(y);
+        if(marker==='x'){
+          ctx.strokeStyle=color;ctx.lineWidth=3;ctx.beginPath();
+          ctx.moveTo(x-8,yy-8);ctx.lineTo(x+8,yy+8);
+          ctx.moveTo(x+8,yy-8);ctx.lineTo(x-8,yy+8);ctx.stroke();
+        } else {
+          ctx.beginPath();ctx.arc(x,yy,8,0,Math.PI*2);
+          ctx.fillStyle=color;ctx.fill();
+          ctx.strokeStyle='#fffdf9';ctx.lineWidth=2.5;ctx.stroke();
+        }
+      });
+    }
+    drawSeries(rich,'#8db5c8','o');
+    drawSeries(poor,'#2c5a9b','x');
+  }
+  drawChart('c1',c1_poor,c1_rich);
+  drawChart('c2',c2_poor,c2_rich);
+
+  // ── IAT BARS ──
+  const subgroups=[
+    {name:'All Groups',val:0.40},{name:'Democrat',val:0.29},{name:'Republican',val:0.48},
+    {name:'Independent',val:0.52},{name:'Men',val:0.40},{name:'Women',val:0.40},
+    {name:'White',val:0.40},{name:'Non-White',val:0.42},
+    {name:'Working Class',val:0.39},{name:'Middle Class',val:0.43},
+  ];
+  const maxVal=0.65;
+  const container=document.getElementById('subgroup-bars');
+  subgroups.forEach(({name,val})=>{
+    const pct=(val/maxVal*100).toFixed(1);
+    container.innerHTML+=`<div class="bar-row"><div class="bar-name">${name}</div><div class="bar-track"><div class="bar-fill" style="width:0%" data-width="${pct}%"></div></div><div class="bar-val">+${val.toFixed(2)}</div></div>`;
+  });
+  setTimeout(()=>{
+    document.querySelectorAll('.bar-fill').forEach(el=>{el.style.width=el.dataset.width;});
+  },400);
+</script>
+</body>
+</html>
